@@ -1,0 +1,90 @@
+/* 🔥 Full Page Layout */
+.home-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+/* 🔥 Title */
+.home-title {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* 🔥 Subtitle */
+.home-subtitle {
+  font-size: 18px;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+/* 🔥 Button Section */
+.home-buttons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* 🔥 Buttons */
+.home-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  background: white;
+  color: #6366f1;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+}
+
+/* 🔥 Button Hover */
+.home-btn:hover {
+  transform: scale(1.08);
+  background: #f3f4f6;
+}
+
+/* 🔥 Cards Layout */
+.home-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 50px;
+  width: 100%;
+  max-width: 900px;
+}
+
+/* 🔥 Individual Card */
+.home-card {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+}
+
+/* 🔥 Card Hover */
+.home-card:hover {
+  transform: translateY(-8px) scale(1.03);
+}
+
+/* 🔥 Card Heading */
+.home-card h2 {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+/* 🔥 Card Text */
+.home-card p {
+  opacity: 0.85;
+  font-size: 14px;
+}

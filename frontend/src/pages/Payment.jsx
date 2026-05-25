@@ -1,0 +1,232 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useState, useEffect } from "react";
+
+function Payment() {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+
+  const course = state?.course;
+  const email = state?.email;
+
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const token = localStorage.getItem("token");
+
+  // ✅ Redirect if no course
+  useEffect(() => {
+    if (!course) navigate("/courses");
+  }, [course, navigate]);
+
+  if (!course) return null;
+
+  const handlePayment = async () => {
+    try {
+      // ✅ VALIDATION
+      if (!password || !confirmPassword) {
+        alert("Please enter password ❗");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match ❗");
+        return;
+      }
+
+      // ❌ REMOVE THIS (VERY IMPORTANT)
+      // if (!token) {
+      //   alert("Please login first ❗");
+      //   navigate("/login");
+      //   return;
+      // }
+
+      // ==========================
+      // 1️⃣ CREATE ORDER
+      // ==========================
+      const { data } = await axios.post(
+        "/api/payment/create-order",
+        {
+          amount: course.price,
+          courseId: course._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // ==========================
+      // 2️⃣ RAZORPAY
+      // ==========================
+      const options = {
+        key: "rzp_test_SGJDv8CpSvpMfO",
+        amount: data.order.amount,
+        currency: "INR",
+        name: "EduAI Nexus",
+        description: course.title,
+        order_id: data.order.id,
+
+        handler: async function () {
+          try {
+            // ==========================
+            // 3️⃣ VERIFY PAYMENT
+            // ==========================
+            const res = await axios.post(
+              "/api/payment/verify-payment",
+              {
+                courseId: course._id,
+                password: password, // 🔥 important
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            if (res.data.success) {
+              alert("🎉 Enrollment Successful!");
+
+              // ✅ REDIRECT (NO LOGIN PAGE)
+              navigate("/student-dashboard");
+            }
+
+          } catch (err) {
+            console.error(err);
+            alert("Enrollment failed ❌");
+          }
+        },
+
+        modal: {
+          ondismiss: () => alert("Payment cancelled ❌"),
+        },
+
+        prefill: {
+          email: email || "test@gmail.com",
+        },
+
+        theme: {
+          color: "#4f46e5",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
+    } catch (err) {
+      console.error(err);
+      alert("Payment failed ❌");
+    }
+  };
+
+  return (
+    <div style={styles.container}>
+      
+      {/* LEFT */}
+      <div style={styles.left}>
+        <h2>🚀 EduAI Nexus</h2>
+        <h3>{course.title}</h3>
+        <p>{course.description}</p>
+
+        <div style={styles.details}>
+          <p>📅 Start: 15 April 2026</p>
+          <p>⏳ Duration: 8 Weeks</p>
+          <p>📝 Last Date: 14 April 2026</p>
+          <p>🎯 Level: Beginner → Advanced</p>
+        </div>
+
+        <div style={styles.badge}>
+          🔥 Limited Seats Available
+        </div>
+      </div>
+
+      {/* RIGHT */}
+      <div style={styles.right}>
+        <h3>Payment</h3>
+
+        <h2>₹ {course.price}</h2>
+
+        <input placeholder="Full Name" style={styles.input} />
+
+        <input
+          value={email || ""}
+          readOnly
+          style={styles.input}
+        />
+
+        <input placeholder="Phone" style={styles.input} />
+
+        <input
+          type="password"
+          placeholder="Create Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={styles.input}
+        />
+
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          style={styles.input}
+        />
+
+        <button style={styles.btn} onClick={handlePayment}>
+          Pay Now →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default Payment;
+
+// 🎨 STYLES (YOUR ORIGINAL UI)
+const styles = {
+  container: { display: "flex", minHeight: "100vh" },
+
+  left: {
+    flex: 1,
+    background: "#4f46e5",
+    color: "white",
+    padding: "40px",
+  },
+
+  right: {
+    flex: 1,
+    padding: "40px",
+    background: "#f3f4f6",
+  },
+
+  details: {
+    marginTop: "20px",
+    lineHeight: "1.8",
+  },
+
+  badge: {
+    marginTop: "20px",
+    background: "orange",
+    padding: "10px",
+    borderRadius: "6px",
+  },
+
+  input: {
+    display: "block",
+    width: "100%",
+    margin: "10px 0",
+    padding: "10px",
+  },
+
+  btn: {
+    marginTop: "20px",
+    width: "100%",
+    padding: "12px",
+    background: "#2563eb",
+    color: "#fff",
+    border: "none",
+    cursor: "pointer",
+  },
+};

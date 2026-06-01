@@ -10,15 +10,18 @@ const lectureSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
     videoUrl: {
       type: String,
       required: true,
       trim: true,
     },
+
     duration: {
       type: String,
       default: "",
     },
+
     isFree: {
       type: Boolean,
       default: false,
@@ -26,6 +29,7 @@ const lectureSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 
 // ===============================
 // 📚 SECTION SCHEMA
@@ -37,6 +41,7 @@ const sectionSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
     lectures: {
       type: [lectureSchema],
       default: [],
@@ -44,6 +49,7 @@ const sectionSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 
 // ===============================
 // 🎓 COURSE SCHEMA
@@ -98,26 +104,43 @@ const courseSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ===============================
-// 🔥 AUTO UPDATE TOTAL LECTURES (NO next() ISSUE)
-// ===============================
 
-// ✅ BEST PRACTICE: async WITHOUT next
-courseSchema.pre("save", async function () {
-  let count = 0;
+// ===============================
+// 🔥 AUTO UPDATE TOTAL LECTURES
+// ===============================
+courseSchema.pre(
+  "save",
+  async function () {
 
-  if (this.sections?.length > 0) {
-    this.sections.forEach((section) => {
-      count += section.lectures?.length || 0;
-    });
+    let count = 0;
+
+    if (
+      this.sections?.length > 0
+    ) {
+
+      this.sections.forEach(
+        (section) => {
+
+          count +=
+            section.lectures
+              ?.length || 0;
+        }
+      );
+    }
+
+    this.totalLectures =
+      count;
   }
+);
 
-  this.totalLectures = count;
-});
 
 // ===============================
 // 🚀 EXPORT
 // ===============================
-const Course = mongoose.model("Course", courseSchema);
+const Course =
+  mongoose.model(
+    "Course",
+    courseSchema
+  );
 
 export default Course;

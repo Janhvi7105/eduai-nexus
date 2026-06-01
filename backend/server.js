@@ -2,36 +2,60 @@ import dotenv from "dotenv";
 dotenv.config(); // ✅ MUST BE FIRST
 
 import app from "./app.js";
-import connectDB from "./config/db.js";
+
+import connectDB
+from "./config/db.js";
 
 
 // ================= IMPORT ROUTES =================
-import authRoutes from "./routes/authRoutes.js";
 
-import enrollmentRoutes from "./routes/enrollmentRoutes.js";
+// 🔐 AUTH
+import authRoutes
+from "./routes/authRoutes.js";
 
-import paymentRoutes from "./routes/paymentRoutes.js";
+// 🎓 ENROLLMENT
+import enrollmentRoutes
+from "./routes/enrollmentRoutes.js";
 
-import courseRoutes from "./routes/courseRoutes.js";
+// 💳 PAYMENT
+import paymentRoutes
+from "./routes/paymentRoutes.js";
 
-import userRoutes from "./routes/userRoutes.js";
+// 💰 REVENUE
+import revenueRoutes
+from "./routes/revenueRoutes.js";
 
-import progressRoutes from "./routes/progressRoutes.js";
+// 📚 COURSES
+import courseRoutes
+from "./routes/courseRoutes.js";
 
+// 👤 USER
+import userRoutes
+from "./routes/userRoutes.js";
+
+// 📊 PROGRESS
+import progressRoutes
+from "./routes/progressRoutes.js";
 
 // 🔔 NOTIFICATIONS
 import notificationRoutes
 from "./routes/notificationRoutes.js";
 
-
 // 📜 CERTIFICATES
 import certificateRoutes
 from "./routes/certificateRoutes.js";
 
-
 // 📝 MOCK TEST
 import mockTestRoutes
 from "./routes/mockTestRoutes.js";
+
+// 👑 ADMIN USERS
+import adminRoutes
+from "./routes/adminRoutes.js";
+
+// 📚 ADMIN COURSES
+import courseAdminRoutes
+from "./routes/courseAdminRoutes.js";
 
 
 // ================= DEBUG LOGS =================
@@ -55,9 +79,7 @@ console.log(
 );
 
 
-// ================= INIT =================
-
-// ✅ CONNECT DATABASE
+// ================= CONNECT DATABASE =================
 connectDB();
 
 
@@ -81,6 +103,13 @@ app.use(
 app.use(
   "/api/payment",
   paymentRoutes
+);
+
+
+// 💰 REVENUE
+app.use(
+  "/api/revenue",
+  revenueRoutes
 );
 
 
@@ -126,6 +155,20 @@ app.use(
 );
 
 
+// 👑 ADMIN USER MANAGEMENT
+app.use(
+  "/api/admin",
+  adminRoutes
+);
+
+
+// 📚 ADMIN COURSE MANAGEMENT
+app.use(
+  "/api/admin/courses",
+  courseAdminRoutes
+);
+
+
 // ================= HEALTH CHECK =================
 app.get("/", (req, res) => {
 
@@ -135,7 +178,7 @@ app.get("/", (req, res) => {
 });
 
 
-// ================= ERROR HANDLER =================
+// ================= GLOBAL ERROR HANDLER =================
 app.use(
   (
     err,
@@ -161,7 +204,7 @@ app.use(
 );
 
 
-// ================= SERVER START =================
+// ================= SERVER =================
 const PORT =
   process.env.PORT || 5000;
 

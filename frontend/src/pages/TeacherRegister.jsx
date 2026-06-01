@@ -47,13 +47,14 @@ function TeacherRegister() {
         phone: form.phone.trim(),
       });
 
+      // ✅ Extract user and token from response
       const { user, token } = res.data;
 
-      // ✅ store auth
+      console.log("TEACHER REGISTERED:", user);
+
+      // ✅ Store auth token and user data
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-
-      console.log("TEACHER REGISTERED:", user);
 
       alert("🎉 Instructor Registered Successfully!");
 

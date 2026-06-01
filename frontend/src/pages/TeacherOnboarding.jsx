@@ -74,13 +74,15 @@ function TeacherOnboarding() {
 
       console.log("✅ RESPONSE:", res.data);
 
-      // 🔥 UPDATE LOCAL STORAGE (VERY IMPORTANT)
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      // ✅ Show waiting for approval message
+      alert("Application submitted successfully.\nPlease wait for admin approval.");
 
-      alert("🎉 Onboarding Completed Successfully!");
+      // ✅ LOG OUT teacher while waiting for approval
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
 
-      // 🔥 REDIRECT
-      navigate("/teacher-dashboard", { replace: true });
+      // ✅ Redirect to home page
+      navigate("/");
 
     } catch (err) {
       console.error("❌ ERROR:", err);
@@ -140,7 +142,7 @@ function TeacherOnboarding() {
         {step === 2 && (
           <>
             <h2>Create a course</h2>
-            <p>How much of a video “pro” are you?</p>
+            <p>How much of a video "pro" are you?</p>
 
             {[
               "I'm a beginner",
@@ -272,17 +274,23 @@ const styles = {
     padding: "10px",
     background: "#e5e7eb",
     borderRadius: "8px",
+    cursor: "pointer",
+    border: "none",
   },
   next: {
     padding: "10px",
     background: "#6366f1",
     color: "#fff",
     borderRadius: "8px",
+    cursor: "pointer",
+    border: "none",
   },
   finish: {
     padding: "10px",
     background: "#10b981",
     color: "#fff",
     borderRadius: "8px",
+    cursor: "pointer",
+    border: "none",
   },
 };

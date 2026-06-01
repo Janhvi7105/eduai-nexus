@@ -27,6 +27,13 @@ function Login() {
         // ================= TEACHER FLOW =================
         if (user.role === "teacher") {
 
+          // ✅ Check if teacher is approved
+          if (!user.isApproved) {
+            // If not approved, redirect to home
+            navigate("/", { replace: true });
+            return;
+          }
+
           // ✅ IF ONBOARDING DONE → DASHBOARD
           if (user.onboarding?.teaching) {
             navigate("/teacher-dashboard", { replace: true });
@@ -90,6 +97,13 @@ function Login() {
 
       // TEACHER
       if (user.role === "teacher") {
+
+        // ✅ Check if teacher is approved
+        if (!user.isApproved) {
+          alert("Waiting for Admin Approval ⏳");
+          navigate("/", { replace: true });
+          return;
+        }
 
         if (user.onboarding?.teaching) {
           navigate("/teacher-dashboard", { replace: true });

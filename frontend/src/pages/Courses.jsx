@@ -7,10 +7,14 @@ function Courses() {
   const [showModal, setShowModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
 
-  const [loading, setLoading] = useState(false);
+  const [sendingOtp, setSendingOtp] = useState(false);
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [showOtpInput, setShowOtpInput] = useState(false);
 
   const navigate = useNavigate();
 
@@ -21,7 +25,7 @@ function Courses() {
     const fetchCourses = async () => {
       try {
         const res = await axios.get("/api/courses");
-        setCourses(res.data.courses); // ✅ FIXED
+        setCourses(res.data.courses);
       } catch (err) {
         console.error(err);
       }
@@ -41,29 +45,42 @@ function Courses() {
     // 🔐 OTHERWISE OTP FLOW
     setSelectedCourse(course);
     setShowModal(true);
-
+    
+    // Reset form
+    setName("");
     setEmail("");
+    setPhone("");
     setOtp("");
+    setShowOtpInput(false);
   };
 
   // ================= SEND OTP =================
   const sendOTP = async () => {
+    if (!name) {
+      alert("Please enter name ❗");
+      return;
+    }
+    
     if (!email) {
       alert("Please enter email ❗");
       return;
     }
+    
+    if (!phone) {
+      alert("Please enter phone number ❗");
+      return;
+    }
 
     try {
-      setLoading(true);
-
+      setSendingOtp(true);
       await axios.post("/api/auth/send-otp", { email });
-
       alert("OTP sent ✅");
+      setShowOtpInput(true);
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Failed to send OTP ❌");
     } finally {
-      setLoading(false);
+      setSendingOtp(false);
     }
   };
 
@@ -80,10 +97,13 @@ function Courses() {
     }
 
     try {
-      setLoading(true);
+      setVerifyingOtp(true);
 
+      // ✅ NOW SENDING NAME, EMAIL, PHONE, AND OTP
       const res = await axios.post("/api/auth/verify-otp", {
+        name,
         email,
+        phone,
         otp,
       });
 
@@ -95,11 +115,13 @@ function Courses() {
 
       setShowModal(false);
 
-      // 👉 MOVE TO PAYMENT
+      // 👉 MOVE TO PAYMENT WITH ALL USER DETAILS
       navigate("/payment", {
         state: {
           course: selectedCourse,
+          name,
           email,
+          phone,
         },
       });
 
@@ -107,7 +129,7 @@ function Courses() {
       console.error(err);
       alert(err.response?.data?.message || "OTP verification failed ❌");
     } finally {
-      setLoading(false);
+      setVerifyingOtp(false);
     }
   };
 
@@ -136,33 +158,82 @@ function Courses() {
       {showModal && (
         <div style={modal.overlay}>
           <div style={modal.box}>
-            <h3>Email Verification</h3>
-
-            <input
-              placeholder="Enter Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={styles.input}
-            />
-
-            <button onClick={sendOTP} disabled={loading}>
-              {loading ? "Sending..." : "Send OTP"}
-            </button>
-
-            <input
-              placeholder="Enter OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              style={styles.input}
-            />
-
-            <button onClick={verifyOTP} disabled={loading}>
-              {loading ? "Verifying..." : "Verify & Continue"}
-            </button>
-
-            <button onClick={() => setShowModal(false)}>
-              Cancel
-            </button>
+            <h3>Complete Registration</h3>
+            
+            {!showOtpInput ? (
+              <>
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  style={styles.input}
+                />
+                
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  style={styles.input}
+                />
+                
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  style={styles.input}
+                />
+                
+                <button
+                  onClick={sendOTP}
+                  disabled={sendingOtp}
+                  style={styles.btn}
+                >
+                  {sendingOtp ? "Sending..." : "Send OTP"}
+                </button>
+                
+                <button 
+                  onClick={() => setShowModal(false)} 
+                  style={{...styles.btn, background: "#666", marginTop: "10px"}}
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <>
+                <p style={{marginBottom: "10px"}}>
+                  OTP sent to: <strong>{email}</strong>
+                </p>
+                
+                <input
+                  type="text"
+                  placeholder="Enter OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  style={styles.input}
+                />
+                
+                <button
+                  onClick={verifyOTP}
+                  disabled={verifyingOtp}
+                  style={styles.btn}
+                >
+                  {verifyingOtp ? "Verifying..." : "Verify & Continue"}
+                </button>
+                
+                <button 
+                  onClick={() => {
+                    setShowOtpInput(false);
+                    setOtp("");
+                  }} 
+                  style={{...styles.btn, background: "#666", marginTop: "10px"}}
+                >
+                  Back
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -171,7 +242,6 @@ function Courses() {
 }
 
 export default Courses;
-
 
 // ================= STYLES =================
 const styles = {
@@ -203,6 +273,7 @@ const styles = {
     border: "none",
     cursor: "pointer",
     borderRadius: "6px",
+    width: "100%",
   },
 
   input: {
@@ -210,6 +281,9 @@ const styles = {
     width: "100%",
     margin: "10px 0",
     padding: "10px",
+    border: "1px solid #ddd",
+    borderRadius: "6px",
+    fontSize: "14px",
   },
 };
 
@@ -224,12 +298,14 @@ const modal = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    zIndex: 1000,
   },
 
   box: {
     background: "#fff",
-    padding: 20,
+    padding: 25,
     borderRadius: 10,
-    width: "300px",
+    width: "350px",
+    maxWidth: "90%",
   },
 };

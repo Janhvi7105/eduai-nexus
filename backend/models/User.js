@@ -1,189 +1,214 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
-  {
+const userSchema =
+  new mongoose.Schema(
 
-    // ================= 🔹 BASIC INFO =================
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+    {
 
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
-    },
+      // ================= 🔹 BASIC INFO =================
+      name: {
+        type: String,
+        required: true,
+        trim: true,
+      },
 
-    password: {
-      type: String,
-      required: true,
-      minlength: 6,
-    },
+      email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+      },
 
-    phone: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+      password: {
+        type: String,
+        required: true,
+        minlength: 6,
+      },
 
-
-    // ================= 🔹 ROLE =================
-    role: {
-      type: String,
-      enum: [
-        "student",
-        "teacher",
-        "admin",
-      ],
-      default: "student",
-    },
+      phone: {
+        type: String,
+        required: true,
+        trim: true,
+      },
 
 
-    // ================= 🔥 PROFESSIONAL PROFILE =================
-    firstName: {
-      type: String,
-      default: "",
-      trim: true,
-    },
-
-    lastName: {
-      type: String,
-      default: "",
-      trim: true,
-    },
-
-    city: {
-      type: String,
-      default: "",
-      trim: true,
-    },
-
-    // ✅ TEACHER BIO
-    bio: {
-      type: String,
-      default: "",
-      trim: true,
-    },
-
-    // ✅ SKILLS
-    skills: {
-      type: String,
-      default: "",
-      trim: true,
-    },
-
-    // ✅ EXPERIENCE
-    experience: {
-      type: String,
-      default: "",
-      trim: true,
-    },
-
-    // ✅ PROFILE IMAGE
-    profileImage: {
-      type: String,
-      default: "",
-    },
-
-    // ✅ SOCIAL LINKS
-    linkedin: {
-      type: String,
-      default: "",
-      trim: true,
-    },
-
-    github: {
-      type: String,
-      default: "",
-      trim: true,
-    },
-
-    portfolio: {
-      type: String,
-      default: "",
-      trim: true,
-    },
+      // ================= 🔹 ROLE =================
+      role: {
+        type: String,
+        enum: [
+          "student",
+          "teacher",
+          "admin",
+        ],
+        default: "student",
+      },
 
 
-    // ================= 🚀 ONBOARDING =================
-    onboarding: {
+      // ================= ✅ TEACHER APPROVAL =================
+      isApproved: {
+        type: Boolean,
+        default: false,
+      },
 
-      teaching: {
+
+      // ================= 🔥 PROFESSIONAL PROFILE =================
+      firstName: {
+        type: String,
+        default: "",
+        trim: true,
+      },
+
+      lastName: {
+        type: String,
+        default: "",
+        trim: true,
+      },
+
+      city: {
+        type: String,
+        default: "",
+        trim: true,
+      },
+
+
+      // ================= 👨‍🏫 TEACHER INFO =================
+
+      // ✅ BIO
+      bio: {
+        type: String,
+        default: "",
+        trim: true,
+      },
+
+      // ✅ SKILLS
+      skills: {
+        type: String,
+        default: "",
+        trim: true,
+      },
+
+      // ✅ EXPERIENCE
+      experience: {
+        type: String,
+        default: "",
+        trim: true,
+      },
+
+
+      // ================= 🖼 PROFILE IMAGE =================
+      profileImage: {
         type: String,
         default: "",
       },
 
-      video: {
+
+      // ================= 🌐 SOCIAL LINKS =================
+      linkedin: {
         type: String,
         default: "",
+        trim: true,
       },
 
-      audience: {
+      github: {
         type: String,
         default: "",
+        trim: true,
       },
-    },
 
-    onboardingCompleted: {
-      type: Boolean,
-      default: false,
-    },
-
-
-    // ================= 📚 ENROLLED COURSES =================
-    enrolledCourses: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Course",
+      portfolio: {
+        type: String,
+        default: "",
+        trim: true,
       },
-    ],
 
 
-    // ================= 🎯 PROGRESS TRACKING =================
-    progress: [
-      {
-        courseId: {
-          type: mongoose.Schema.Types.ObjectId,
+      // ================= 🚀 TEACHER ONBOARDING =================
+      onboarding: {
+
+        teaching: {
+          type: String,
+          default: "",
+        },
+
+        video: {
+          type: String,
+          default: "",
+        },
+
+        audience: {
+          type: String,
+          default: "",
+        },
+      },
+
+      onboardingCompleted: {
+        type: Boolean,
+        default: false,
+      },
+
+
+      // ================= 📚 ENROLLED COURSES =================
+      enrolledCourses: [
+
+        {
+          type:
+            mongoose.Schema.Types.ObjectId,
+
           ref: "Course",
         },
+      ],
 
-        lectureIndex: {
-          type: Number,
-          default: 0,
-        },
 
-        watchedTime: {
-          type: Number,
-          default: 0,
-        },
+      // ================= 🎯 PROGRESS TRACKING =================
+      progress: [
 
-        completed: {
-          type: Boolean,
-          default: false,
+        {
+
+          courseId: {
+
+            type:
+              mongoose.Schema.Types.ObjectId,
+
+            ref: "Course",
+          },
+
+          lectureIndex: {
+            type: Number,
+            default: 0,
+          },
+
+          watchedTime: {
+            type: Number,
+            default: 0,
+          },
+
+          completed: {
+            type: Boolean,
+            default: false,
+          },
         },
+      ],
+
+
+      // ================= 🔐 OTP =================
+      otp: {
+        type: String,
       },
-    ],
 
+      otpExpiry: {
+        type: Date,
+      },
 
-    // ================= 🔐 OTP =================
-    otp: {
-      type: String,
     },
 
-    otpExpiry: {
-      type: Date,
-    },
+    {
+      timestamps: true,
+    }
+  );
 
-  },
-  {
-    timestamps: true,
-  }
-);
 
+// ================= MODEL =================
 const User = mongoose.model(
   "User",
   userSchema

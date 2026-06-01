@@ -33,6 +33,15 @@ import TeacherCourse from "./pages/TeacherCourse";
 
 // ================= 👨‍🎓 STUDENTS =================
 import Students from "./pages/Students";
+import StudentProfile from "./pages/StudentProfile";
+
+
+// ================= 👑 ADMIN =================
+import AdminDashboard from "./pages/AdminDashboard";
+import ManageStudents from "./pages/ManageStudents";
+import ManageTeachers from "./pages/ManageTeachers";
+import ManageCourses from "./pages/ManageCourses";
+import PendingTeachers from "./pages/PendingTeachers";  // ✅ ADDED
 
 
 // ================= 🔔 NOTIFICATIONS =================
@@ -146,6 +155,57 @@ function App() {
 
 
         {/* ================================================= */}
+        {/* 👑 ADMIN ROUTES */}
+        {/* ================================================= */}
+
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/manage-students"
+          element={
+            <ProtectedRoute>
+              <ManageStudents />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/manage-teachers"
+          element={
+            <ProtectedRoute>
+              <ManageTeachers />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ✅ ADDED PENDING TEACHERS ROUTE */}
+        <Route
+          path="/pending-teachers"
+          element={
+            <ProtectedRoute>
+              <PendingTeachers />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/manage-courses"
+          element={
+            <ProtectedRoute>
+              <ManageCourses />
+            </ProtectedRoute>
+          }
+        />
+
+
+        {/* ================================================= */}
         {/* 👨‍🎓 STUDENT COURSE PLAYER */}
         {/* ================================================= */}
 
@@ -191,7 +251,6 @@ function App() {
         {/* 📝 MOCK TEST */}
         {/* ================================================= */}
 
-        {/* 👨‍🎓 STUDENT MOCK TEST LIST */}
         <Route
           path="/mock-tests"
           element={
@@ -201,7 +260,6 @@ function App() {
           }
         />
 
-        {/* 👨‍🏫 CREATE MOCK TEST */}
         <Route
           path="/mock-test/:courseId"
           element={
@@ -211,7 +269,6 @@ function App() {
           }
         />
 
-        {/* 👨‍🎓 ATTEMPT MOCK TEST */}
         <Route
           path="/attempt-test/:testId"
           element={
@@ -231,6 +288,15 @@ function App() {
           element={
             <ProtectedRoute>
               <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/student-profile"
+          element={
+            <ProtectedRoute>
+              <StudentProfile />
             </ProtectedRoute>
           }
         />
@@ -311,11 +377,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-
-        {/* ================================================= */}
-        {/* 👤 TEACHER PROFILE */}
-        {/* ================================================= */}
 
         <Route
           path="/teacher-profile"

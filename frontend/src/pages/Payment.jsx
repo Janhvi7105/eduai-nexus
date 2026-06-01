@@ -1,18 +1,30 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 function Payment() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
+  // ✅ Step A: Extract all user details from state
   const course = state?.course;
-  const email = state?.email;
+  const name = state?.name || "";
+  const email = state?.email || "";
+  const phone = state?.phone || "";
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  // ✅ Step B: Initialize form fields with received data
+  const [fullName, setFullName] = useState(name);
+  const [userEmail, setUserEmail] = useState(email);
+  const [userPhone, setUserPhone] = useState(phone);
+
   const token = localStorage.getItem("token");
+
+  // ✅ Step 2: Check if token exists
+  console.log("TOKEN:", token);
 
   // ✅ Redirect if no course
   useEffect(() => {
@@ -25,21 +37,22 @@ function Payment() {
     try {
       // ✅ VALIDATION
       if (!password || !confirmPassword) {
-        alert("Please enter password ❗");
+        Swal.fire({
+          icon: "warning",
+          title: "Password Required",
+          text: "Please enter password.",
+        });
         return;
       }
 
       if (password !== confirmPassword) {
-        alert("Passwords do not match ❗");
+        Swal.fire({
+          icon: "warning",
+          title: "Passwords Do Not Match",
+          text: "Please enter matching passwords.",
+        });
         return;
       }
-
-      // ❌ REMOVE THIS (VERY IMPORTANT)
-      // if (!token) {
-      //   alert("Please login first ❗");
-      //   navigate("/login");
-      //   return;
-      // }
 
       // ==========================
       // 1️⃣ CREATE ORDER
@@ -86,25 +99,52 @@ function Payment() {
               }
             );
 
+            // ✅ Step 1: Add debug log for verify payment response
+            console.log("VERIFY PAYMENT RESPONSE:", res.data);
+
             if (res.data.success) {
-              alert("🎉 Enrollment Successful!");
-
-              // ✅ REDIRECT (NO LOGIN PAGE)
+              await Swal.fire({
+                icon: "success",
+                title: "Enrollment Successful 🎉",
+                text: "You have successfully enrolled in the course.",
+                confirmButtonText: "Go To Dashboard",
+                allowOutsideClick: false,
+              });
               navigate("/student-dashboard");
+            } else {
+              // Log if success is false
+              console.log("SUCCESS IS FALSE:", res.data);
+              Swal.fire({
+                icon: "error",
+                title: "Enrollment Failed ❌",
+                text: res.data.message || "Something went wrong.",
+              });
             }
-
           } catch (err) {
-            console.error(err);
-            alert("Enrollment failed ❌");
+            console.error("VERIFY PAYMENT ERROR:", err);
+            console.error("ERROR RESPONSE DATA:", err.response?.data);
+            Swal.fire({
+              icon: "error",
+              title: "Enrollment Failed ❌",
+              text: err.response?.data?.message || "Something went wrong while enrolling.",
+            });
           }
         },
 
         modal: {
-          ondismiss: () => alert("Payment cancelled ❌"),
+          ondismiss: () => {
+            Swal.fire({
+              icon: "warning",
+              title: "Payment Cancelled",
+              text: "You cancelled the payment process.",
+            });
+          },
         },
 
         prefill: {
-          email: email || "test@gmail.com",
+          name: fullName,
+          email: userEmail,
+          contact: userPhone,
         },
 
         theme: {
@@ -116,8 +156,12 @@ function Payment() {
       rzp.open();
 
     } catch (err) {
-      console.error(err);
-      alert("Payment failed ❌");
+      console.error("PAYMENT INIT ERROR:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Payment Failed ❌",
+        text: "Unable to process payment.",
+      });
     }
   };
 
@@ -148,15 +192,29 @@ function Payment() {
 
         <h2>₹ {course.price}</h2>
 
-        <input placeholder="Full Name" style={styles.input} />
+        {/* ✅ Step C: Name input with fullName state */}
+        <input 
+          placeholder="Full Name" 
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          style={styles.input} 
+        />
 
+        {/* ✅ Email input with userEmail state */}
         <input
-          value={email || ""}
-          readOnly
+          placeholder="Email"
+          value={userEmail}
+          onChange={(e) => setUserEmail(e.target.value)}
           style={styles.input}
         />
 
-        <input placeholder="Phone" style={styles.input} />
+        {/* ✅ Phone input with userPhone state */}
+        <input 
+          placeholder="Phone" 
+          value={userPhone}
+          onChange={(e) => setUserPhone(e.target.value)}
+          style={styles.input} 
+        />
 
         <input
           type="password"
@@ -218,6 +276,9 @@ const styles = {
     width: "100%",
     margin: "10px 0",
     padding: "10px",
+    border: "1px solid #ddd",
+    borderRadius: "6px",
+    fontSize: "14px",
   },
 
   btn: {
@@ -228,5 +289,7 @@ const styles = {
     color: "#fff",
     border: "none",
     cursor: "pointer",
+    borderRadius: "6px",
+    fontSize: "16px",
   },
 };

@@ -1,16 +1,20 @@
-import { useNavigate } from "react-router-dom";
+import {
+  useNavigate,
+} from "react-router-dom";
 
 function Topbar({
   theme,
   setTheme,
 }) {
 
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
   const user =
     JSON.parse(
       localStorage.getItem("user")
     ) || {};
+
 
   return (
 
@@ -36,6 +40,7 @@ function Topbar({
             : "0 4px 20px rgba(0,0,0,0.05)",
       }}
     >
+
 
       {/* ================= RIGHT SECTION ================= */}
       <div style={styles.right}>
@@ -108,23 +113,37 @@ function Topbar({
                 : "#f3f4f6",
           }}
 
-          // ✅ PROFILE CLICK
+          // ✅ DYNAMIC PROFILE NAVIGATION
           onClick={() =>
-            navigate("/teacher-profile")
+
+            navigate(
+
+              user?.role === "teacher"
+                ? "/teacher-profile"
+                : "/student-profile"
+
+            )
           }
         >
 
-          {/* AVATAR */}
+
+          {/* ================= AVATAR ================= */}
           <div style={styles.avatar}>
 
-            {user?.name
-              ? user.name[0].toUpperCase()
-              : "A"}
+
+            {
+              user?.name
+
+                ? user.name[0]
+                    .toUpperCase()
+
+                : "A"
+            }
 
           </div>
 
 
-          {/* NAME */}
+          {/* ================= NAME ================= */}
           <span
             style={{
               ...styles.name,
@@ -135,7 +154,12 @@ function Topbar({
                   : "#111827",
             }}
           >
-            {user?.name || "Admin"}
+
+            {
+              user?.name ||
+              "Admin"
+            }
+
           </span>
 
         </div>
@@ -153,7 +177,9 @@ export default Topbar;
 const styles = {
 
   topbar: {
+
     height: "80px",
+
     borderRadius: "20px",
 
     display: "flex",
@@ -170,19 +196,26 @@ const styles = {
   },
 
   right: {
+
     display: "flex",
+
     alignItems: "center",
+
     gap: "20px",
   },
 
   iconBox: {
+
     width: "55px",
+
     height: "55px",
 
     borderRadius: "18px",
 
     display: "flex",
+
     alignItems: "center",
+
     justifyContent: "center",
 
     cursor: "pointer",
@@ -195,7 +228,9 @@ const styles = {
   },
 
   dot: {
+
     width: "10px",
+
     height: "10px",
 
     background: "red",
@@ -205,6 +240,7 @@ const styles = {
     position: "absolute",
 
     top: "12px",
+
     right: "12px",
 
     border: "2px solid white",
@@ -230,6 +266,7 @@ const styles = {
   avatar: {
 
     width: "45px",
+
     height: "45px",
 
     borderRadius: "50%",
@@ -251,7 +288,9 @@ const styles = {
   },
 
   name: {
+
     fontWeight: "600",
+
     fontSize: "18px",
   },
 };

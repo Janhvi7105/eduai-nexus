@@ -46,7 +46,6 @@ export const sendOTP = async (req, res) => {
       success: true,
       message: "OTP sent successfully ✅",
     });
-
   } catch (error) {
     console.error("SEND OTP ERROR:", error);
     res.status(500).json({
@@ -57,11 +56,11 @@ export const sendOTP = async (req, res) => {
 };
 
 // ==========================
-// 🔐 VERIFY OTP (CREATE STUDENT)
+// 🔐 VERIFY OTP
 // ==========================
 export const verifyOTP = async (req, res) => {
   try {
-    const { email, otp } = req.body;
+    const { name, email, phone, otp } = req.body;
 
     const stored = otpStore[email];
 
@@ -91,13 +90,17 @@ export const verifyOTP = async (req, res) => {
 
     let user = await User.findOne({ email });
 
+    // ==========================
+    // CREATE STUDENT IF NOT EXISTS
+    // ==========================
     if (!user) {
       user = await User.create({
+        name,
         email,
+        phone,
         password: await bcrypt.hash("temp_user", 10),
         role: "student",
-        name: "New User",
-        phone: "0000000000",
+        isApproved: true,
       });
     }
 
@@ -108,7 +111,6 @@ export const verifyOTP = async (req, res) => {
       token,
       user,
     });
-
   } catch (error) {
     console.error("VERIFY OTP ERROR:", error);
     res.status(500).json({
@@ -143,6 +145,16 @@ export const loginUser = async (req, res) => {
       });
     }
 
+    // =====================================
+    // 👨‍🏫 TEACHER APPROVAL CHECK
+    // =====================================
+    if (user.role === "teacher" && !user.isApproved) {
+      return res.status(403).json({
+        success: false,
+        message: "Waiting for admin approval ⏳",
+      });
+    }
+
     const token = generateToken(user._id);
 
     res.json({
@@ -150,7 +162,6 @@ export const loginUser = async (req, res) => {
       token,
       user,
     });
-
   } catch (error) {
     console.error("LOGIN ERROR:", error);
     res.status(500).json({
@@ -161,7 +172,7 @@ export const loginUser = async (req, res) => {
 };
 
 // ==========================
-// 👨‍🏫 REGISTER TEACHER (NEW USER)
+// 👨‍🏫 REGISTER TEACHER
 // ==========================
 export const registerTeacher = async (req, res) => {
   try {
@@ -185,23 +196,28 @@ export const registerTeacher = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // =====================================
+    // 👨‍🏫 CREATE PENDING TEACHER
+    // =====================================
     const teacher = await User.create({
       name,
       email,
       password: hashedPassword,
       phone,
       role: "teacher",
+      isApproved: false,
     });
 
+    // ✅ STEP 1: Generate token for the teacher
     const token = generateToken(teacher._id);
 
+    // ✅ STEP 2: Return token along with user data
     res.status(201).json({
       success: true,
-      message: "Teacher registered successfully 🎉",
+      message: "Instructor request submitted successfully ⏳ Waiting for admin approval.",
       user: teacher,
       token,
     });
-
   } catch (error) {
     console.error("REGISTER TEACHER ERROR:", error);
     res.status(500).json({
@@ -212,7 +228,7 @@ export const registerTeacher = async (req, res) => {
 };
 
 // ==========================
-// 🔥 SET PASSWORD AFTER PAYMENT
+// 🔥 SET PASSWORD
 // ==========================
 export const setUserPassword = async (req, res) => {
   try {
@@ -221,13 +237,13 @@ export const setUserPassword = async (req, res) => {
     const user = await User.findById(req.user._id);
 
     user.password = await bcrypt.hash(password, 10);
+
     await user.save();
 
     res.json({
       success: true,
       message: "Password set successfully ✅",
     });
-
   } catch (error) {
     console.error("SET PASSWORD ERROR:", error);
     res.status(500).json({

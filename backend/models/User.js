@@ -45,12 +45,25 @@ const userSchema =
       },
 
 
-      // ================= ✅ TEACHER APPROVAL =================
-      isApproved: {
-        type: Boolean,
-        default: false,
-      },
+   // ================= ✅ TEACHER APPROVAL =================
+isApproved: {
+  type: Boolean,
+  default: false,
+},
 
+applicationStatus: {
+  type: String,
+  enum: [
+    "pending",
+    "approved",
+    "rejected",
+  ],
+  default: "pending",
+},
+
+reviewedAt: {
+  type: Date,
+},
 
       // ================= 🔥 PROFESSIONAL PROFILE =================
       firstName: {

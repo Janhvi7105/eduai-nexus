@@ -1,4 +1,5 @@
 import Course from "../models/Course.js";
+import Notification from "../models/Notification.js";
 
 
 // ==========================
@@ -51,6 +52,19 @@ export const createCourse = async (req, res) => {
 
         students: [],
       });
+
+    // ==========================
+    // CREATE NOTIFICATION
+    // ==========================
+    await Notification.create({
+
+      title: "New Course",
+
+      message:
+        `${req.user.name} created ${title}`,
+
+      type: "completion",
+    });
 
     res.status(201).json({
 
@@ -185,6 +199,53 @@ export const getSingleCourse = async (
         "Server error ❌",
     });
   }
+};
+
+
+// ==========================
+// 📚 GET MY COURSES
+// ==========================
+export const getMyCourses = async (req, res) => {
+
+  try {
+
+    let courses;
+
+    if (req.user.role === "teacher") {
+
+      courses = await Course.find({
+        instructor: req.user._id,
+      }).populate(
+        "instructor",
+        "name"
+      );
+
+    } else {
+
+      courses = await Course.find({
+        students: req.user._id,
+      }).populate(
+        "instructor",
+        "name"
+      );
+
+    }
+
+    res.json({
+      success: true,
+      courses,
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+    });
+
+  }
+
 };
 
 
@@ -335,6 +396,52 @@ export const addSection = async (
     res.status(500).json({
 
       success: false,
+    });
+  }
+};
+
+
+// ==========================
+// ✏️ EDIT SECTION
+// ==========================
+export const editSection = async (req, res) => {
+
+  try {
+
+    const {
+      courseId,
+      sectionIndex,
+      title,
+    } = req.body;
+
+    const course =
+      await Course.findById(courseId);
+
+    if (!course) {
+
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    course.sections[sectionIndex].title =
+      title;
+
+    await course.save();
+
+    res.json({
+      success: true,
+      message: "Module updated",
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Update failed",
     });
   }
 };
@@ -581,7 +688,13 @@ export const editLecture = async (
       sectionIndex,
       lectureIndex,
       title,
+      videoUrl,
+      duration,
     } = req.body;
+
+    console.log("REQ BODY:", req.body);
+    console.log("SECTION INDEX:", sectionIndex);
+    console.log("LECTURE INDEX:", lectureIndex);
 
     const course =
       await Course.findById(
@@ -591,39 +704,41 @@ export const editLecture = async (
     if (!course) {
 
       return res.status(404).json({
-
         success: false,
       });
     }
 
-    if (
-      !course.sections[
-        sectionIndex
-      ]?.lectures[
-        lectureIndex
-      ]
-    ) {
+    const section =
+      course.sections[sectionIndex];
+
+    console.log("SECTION:", section);
+
+    const lecture =
+      section?.lectures?.[lectureIndex];
+
+    console.log("LECTURE:", lecture);
+
+    if (!lecture) {
 
       return res.status(400).json({
-
         success: false,
       });
     }
 
-    course.sections[
-      sectionIndex
-    ].lectures[
-      lectureIndex
-    ].title = title;
+    lecture.title =
+      title || lecture.title;
+
+    lecture.videoUrl =
+      videoUrl || lecture.videoUrl;
+
+    lecture.duration =
+      duration || lecture.duration;
 
     await course.save();
 
     res.json({
-
       success: true,
-
-      sections:
-        course.sections,
+      sections: course.sections,
     });
 
   } catch (err) {
@@ -631,7 +746,6 @@ export const editLecture = async (
     console.error(err);
 
     res.status(500).json({
-
       success: false,
     });
   }
@@ -693,4 +807,68 @@ export const deleteLecture = async (
       success: false,
     });
   }
+};
+
+
+// ==========================
+// 🔒 GET COURSE CONTENT
+// ==========================
+export const getCourseContent = async (req, res) => {
+
+  try {
+
+    const course = await Course.findById(req.params.id);
+
+    if (!course) {
+
+      return res.status(404).json({
+
+        success: false,
+
+        message: "Course not found",
+
+      });
+
+    }
+
+    const enrolled = course.students.some(
+
+      (student) => student.toString() === req.user._id.toString()
+
+    );
+
+    if (!enrolled) {
+
+      return res.status(403).json({
+
+        success: false,
+
+        message: "Please enroll first",
+
+      });
+
+    }
+
+    res.json({
+
+      success: true,
+
+      course,
+
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+
+      success: false,
+
+      message: "Server error",
+
+    });
+
+  }
+
 };

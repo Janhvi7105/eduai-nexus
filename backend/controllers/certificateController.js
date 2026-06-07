@@ -27,7 +27,10 @@ export const generateCertificate = async (
     const course =
       await Course.findById(
         courseId
-      );
+      ).populate("instructor", "name");
+      
+    console.log("COURSE =>", course);
+    console.log("INSTRUCTOR =>", course.instructor);
 
 
     // ================= VALIDATION =================
@@ -63,6 +66,12 @@ export const generateCertificate = async (
       );
 
 
+    console.log(
+      "Instructor Name:",
+      course.instructor?.name
+    );
+
+
     // ================= GENERATE CERTIFICATE =================
     const certificate =
       await Certificate.create({
@@ -92,7 +101,7 @@ export const generateCertificate = async (
 
         // ================= TEACHER =================
         instructorName:
-          course.instructorName ||
+          course.instructor?.name ||
           "EduAI Instructor",
 
 

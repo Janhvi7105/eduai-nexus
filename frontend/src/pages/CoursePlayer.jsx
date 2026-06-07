@@ -45,7 +45,12 @@ function CoursePlayer() {
       try {
 
         const res = await axios.get(
-          `/api/courses/${id}`
+          `/api/courses/course-content/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         setCourse(
@@ -74,12 +79,18 @@ function CoursePlayer() {
       } catch (err) {
 
         console.error(err);
+        
+        // If not enrolled or error, redirect to courses
+        if (err.response?.status === 403 || err.response?.status === 404) {
+          alert("Please enroll in this course first ❗");
+          navigate("/courses");
+        }
       }
     };
 
     fetchCourse();
 
-  }, [id]);
+  }, [id, token, navigate]);
 
 
   // ================= TOTAL LECTURES =================

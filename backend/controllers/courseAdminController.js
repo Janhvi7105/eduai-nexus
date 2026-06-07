@@ -10,11 +10,11 @@ export const getAllCourses =
     try {
 
       const courses =
-        await Course.find()
-        .populate(
-          "teacher",
-          "name email"
-        );
+  await Course.find()
+  .populate(
+    "instructor",
+    "name email"
+  );
 
       res.status(200).json({
 
@@ -81,10 +81,31 @@ export const approveCourse =
 
     try {
 
+      console.log(
+        "APPROVE REQUEST:",
+        req.params.id
+      );
+
       const course =
         await Course.findById(
           req.params.id
         );
+
+      console.log(
+        "COURSE:",
+        course
+      );
+
+      if (!course) {
+
+        return res.status(404).json({
+
+          success: false,
+
+          message:
+            "Course not found",
+        });
+      }
 
       course.approved = true;
 
@@ -100,18 +121,20 @@ export const approveCourse =
 
     } catch (error) {
 
-      console.log(error);
+      console.log(
+        "APPROVE ERROR:",
+        error
+      );
 
       res.status(500).json({
 
         success: false,
 
         message:
-          "Failed to approve course",
+          error.message,
       });
     }
   };
-
 
 // =======================================
 // FEATURE COURSE
@@ -121,10 +144,31 @@ export const featureCourse =
 
     try {
 
+      console.log(
+        "FEATURE REQUEST:",
+        req.params.id
+      );
+
       const course =
         await Course.findById(
           req.params.id
         );
+
+      console.log(
+        "COURSE:",
+        course
+      );
+
+      if (!course) {
+
+        return res.status(404).json({
+
+          success: false,
+
+          message:
+            "Course not found",
+        });
+      }
 
       course.featured =
         !course.featured;
@@ -136,19 +180,22 @@ export const featureCourse =
         success: true,
 
         message:
-          "Course updated successfully",
+          "Course featured successfully",
       });
 
     } catch (error) {
 
-      console.log(error);
+      console.log(
+        "FEATURE ERROR:",
+        error
+      );
 
       res.status(500).json({
 
         success: false,
 
         message:
-          "Failed to feature course",
+          error.message,
       });
     }
   };

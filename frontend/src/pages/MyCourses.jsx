@@ -111,9 +111,9 @@ function MyCourses() {
           return;
         }
 
-        // ✅ FETCH ALL COURSES
+        // ✅ FETCH MY COURSES
         const res = await axios.get(
-          "/api/courses",
+          "/api/courses/my-courses",
           {
             headers: {
               Authorization:
@@ -123,7 +123,7 @@ function MyCourses() {
         );
 
         console.log(
-          "📚 COURSES:",
+          "📚 MY COURSES:",
           res.data
         );
 
@@ -187,7 +187,7 @@ function MyCourses() {
 
                   ? "👨‍🏫 My Teaching Courses"
 
-                  : "📚 My Courses"
+                  : "📖 My Courses"
               }
             </h1>
 

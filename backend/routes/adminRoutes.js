@@ -4,9 +4,12 @@ import {
   getStudents,
   getTeachers,
   getPendingTeachers,
+  getTeacherHistory,
   approveTeacher,
+  rejectTeacher,
   deleteUser,
   getAdminStats,
+  getNotifications,
 } from "../controllers/adminController.js";
 
 import { protect }
@@ -24,6 +27,7 @@ router.get(
   protect,
   getAdminStats
 );
+
 
 // =======================================
 // GET STUDENTS
@@ -56,6 +60,16 @@ router.get(
 
 
 // =======================================
+// TEACHER REQUEST HISTORY
+// =======================================
+router.get(
+  "/teacher-history",
+  protect,
+  getTeacherHistory
+);
+
+
+// =======================================
 // APPROVE TEACHER
 // =======================================
 router.put(
@@ -66,12 +80,32 @@ router.put(
 
 
 // =======================================
+// REJECT TEACHER
+// =======================================
+router.put(
+  "/reject-teacher/:id",
+  protect,
+  rejectTeacher
+);
+
+
+// =======================================
 // DELETE USER
 // =======================================
 router.delete(
   "/user/:id",
   protect,
   deleteUser
+);
+
+
+// =======================================
+// GET NOTIFICATIONS
+// =======================================
+router.get(
+  "/notifications",
+  protect,
+  getNotifications
 );
 
 export default router;

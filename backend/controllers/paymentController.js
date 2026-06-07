@@ -2,6 +2,7 @@ import Razorpay from "razorpay";
 import Course from "../models/Course.js";
 import User from "../models/User.js";
 import Transaction from "../models/Transaction.js";
+import Notification from "../models/Notification.js";
 import bcrypt from "bcryptjs";
 
 
@@ -245,6 +246,20 @@ export const verifyPayment =
           "paid",
       });
 
+      // ==========================
+      // CREATE NOTIFICATION
+      // ==========================
+      await Notification.create({
+
+        title: "New Enrollment",
+
+        message:
+          `${req.user.name} enrolled in ${course.title}`,
+
+        type: "enrollment",
+
+        userId: userId,
+      });
 
       // ==========================
       // SUCCESS

@@ -1,25 +1,18 @@
 import express from "express";
 
 import {
-
   createCourse,
-
   getCourses,
-
   getSingleCourse,
-
+  getMyCourses,
+  getCourseContent,
   updateCourse,
-
   addSection,
-
   addLecture,
-
   editLecture,
-
+  editSection,
   deleteLecture,
-
   deleteSection,
-
 } from "../controllers/courseController.js";
 
 import {
@@ -40,6 +33,20 @@ router.get(
   getCourses
 );
 
+// Get my courses (student's enrolled courses)
+router.get(
+  "/my-courses",
+  protect,
+  getMyCourses
+);
+
+// Get course content (protected - checks enrollment)
+router.get(
+  "/course-content/:id",
+  protect,
+  getCourseContent
+);
+
 // Get single course
 router.get(
   "/:id",
@@ -56,6 +63,26 @@ router.post(
   "/create",
   protect,
   createCourse
+);
+
+
+// ==========================
+// ✏️ EDIT LECTURE
+// ==========================
+router.put(
+  "/edit-lecture",
+  protect,
+  editLecture
+);
+
+
+// ==========================
+// ✏️ EDIT SECTION
+// ==========================
+router.put(
+  "/edit-section",
+  protect,
+  editSection
 );
 
 
@@ -96,16 +123,6 @@ router.post(
   "/add-lecture",
   protect,
   addLecture
-);
-
-
-// ==========================
-// ✏️ EDIT LECTURE
-// ==========================
-router.put(
-  "/edit-lecture",
-  protect,
-  editLecture
 );
 
 

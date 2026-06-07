@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 
 import Layout from "../components/common/Layout";
+import Swal from "sweetalert2";
 
 
 function TeacherCourse() {
@@ -31,6 +32,20 @@ function TeacherCourse() {
   const theme =
     localStorage.getItem("theme") ||
     "light";
+
+
+  // ================= HANDLE UPLOAD COURSE =================
+  const handleUploadCourse = async () => {
+
+    await Swal.fire({
+      icon: "success",
+      title: "Course Uploaded Successfully 🎉",
+      text: "Course is now visible to students.",
+      confirmButtonText: "OK",
+    });
+
+    navigate("/courses");
+  };
 
 
   // ================= FETCH COURSE =================
@@ -243,13 +258,13 @@ function TeacherCourse() {
             </button>
 
 
-            {/* 📹 UPLOAD */}
+            {/* 🚀 UPLOAD COURSE */}
             <button
               style={styles.uploadBtn}
+              onClick={handleUploadCourse}
             >
-              📹 Upload Lecture
+              🚀 Upload Course
             </button>
-
 
             {/* 📝 MOCK TEST */}
             <button

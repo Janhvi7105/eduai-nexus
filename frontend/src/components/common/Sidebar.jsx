@@ -35,11 +35,6 @@ function Sidebar({ theme }) {
       icon: "📚",
     },
     {
-      name: "Resources",
-      path: "/resources",
-      icon: "📦",
-    },
-    {
       name: "Mock Test",
       path: "/mock-tests",
       icon: "📝",
@@ -78,6 +73,11 @@ function Sidebar({ theme }) {
       path: "/students",
       icon: "👨‍🎓",
     },
+     {
+    name: "Notes",
+    path: "/teacher-notes",
+    icon: "📖",
+  },
   ];
 
   // ================= SELECT MENU =================

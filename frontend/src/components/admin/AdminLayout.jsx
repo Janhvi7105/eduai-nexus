@@ -1,36 +1,22 @@
-import AdminSidebar
-from "./AdminSidebar";
+import AdminSidebar from "./AdminSidebar";
 
-import AdminTopbar
-from "./AdminTopbar";
-
-
-function AdminLayout({
-  children,
-}) {
-
+function AdminLayout({ children, darkMode }) {
   return (
-
-    <div style={styles.container}>
-
-
+    <div
+      style={{
+        ...styles.container,
+        background: darkMode ? "#020617" : "#f3f4f6",
+      }}
+    >
       {/* ================= SIDEBAR ================= */}
-      <AdminSidebar />
-
+      <AdminSidebar darkMode={darkMode} />
 
       {/* ================= MAIN CONTENT ================= */}
       <div style={styles.main}>
 
-
-        {/* ================= TOPBAR ================= */}
-        <AdminTopbar />
-
-
         {/* ================= PAGE CONTENT ================= */}
         <div style={styles.content}>
-
           {children}
-
         </div>
 
       </div>
@@ -41,32 +27,22 @@ function AdminLayout({
 
 export default AdminLayout;
 
-
 // ================= STYLES =================
 const styles = {
-
   container: {
-
     display: "flex",
-
-    background: "#020617",
-
     minHeight: "100vh",
+    transition: "all 0.3s ease",
   },
 
   main: {
-
     marginLeft: "260px",
-
     width: "100%",
-
     padding: "20px",
-
     boxSizing: "border-box",
   },
 
   content: {
-
     width: "100%",
   },
 };

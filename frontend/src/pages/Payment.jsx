@@ -110,7 +110,7 @@ function Payment() {
                 confirmButtonText: "Go To Dashboard",
                 allowOutsideClick: false,
               });
-              navigate("/student-dashboard");
+              navigate("/my-courses");
             } else {
               // Log if success is false
               console.log("SUCCESS IS FALSE:", res.data);

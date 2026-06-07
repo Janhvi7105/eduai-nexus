@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import Course from "../models/Course.js";
 import Transaction from "../models/Transaction.js";
+import Notification from "../models/Notification.js";
 import sendEmail from "../utils/sendEmail.js";
 
 // =======================================
@@ -15,7 +16,12 @@ export const getStudents =
         await User.find({
 
           role: "student",
-        }).select("-password");
+        })
+        .populate(
+          "enrolledCourses",
+          "title"
+        )
+        .select("-password");
 
       res.status(200).json({
 
@@ -118,6 +124,55 @@ export const getPendingTeachers =
 
 
 // =======================================
+// TEACHER REQUEST HISTORY
+// =======================================
+export const getTeacherHistory =
+  async (req, res) => {
+
+    try {
+
+      const history =
+        await User.find({
+
+          role: "teacher",
+
+          applicationStatus: {
+            $in: [
+              "approved",
+              "rejected",
+            ],
+          },
+
+        })
+        .sort({
+          reviewedAt: -1,
+        });
+
+      res.status(200).json({
+
+        success: true,
+
+        history,
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
+
+        success: false,
+
+        message:
+          "Failed to fetch history",
+      });
+
+    }
+
+  };
+
+
+// =======================================
 // APPROVE TEACHER
 // =======================================
 export const approveTeacher =
@@ -141,10 +196,26 @@ export const approveTeacher =
         });
       }
 
-      teacher.isApproved =
-        true;
+      teacher.isApproved = true;
+
+      teacher.applicationStatus =
+        "approved";
+
+      teacher.reviewedAt =
+        new Date();
 
       await teacher.save();
+
+      // Create notification
+      await Notification.create({
+
+        title: "Instructor Approved",
+
+        message:
+          `${teacher.name} was approved as instructor`,
+
+        type: "completion",
+      });
 
       // Send approval email to teacher
       await sendEmail(
@@ -180,6 +251,66 @@ EduAI Nexus Team`
           "Failed to approve teacher",
       });
     }
+  };
+
+
+// =======================================
+// REJECT TEACHER
+// =======================================
+export const rejectTeacher =
+  async (req, res) => {
+
+    try {
+
+      const teacher =
+        await User.findById(
+          req.params.id
+        );
+
+      if (!teacher) {
+
+        return res.status(404).json({
+
+          success: false,
+
+          message:
+            "Teacher not found",
+        });
+
+      }
+
+      teacher.isApproved = false;
+
+      teacher.applicationStatus =
+        "rejected";
+
+      teacher.reviewedAt =
+        new Date();
+
+      await teacher.save();
+
+      res.status(200).json({
+
+        success: true,
+
+        message:
+          "Teacher rejected",
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
+
+        success: false,
+
+        message:
+          "Failed to reject teacher",
+      });
+
+    }
+
   };
 
 
@@ -269,3 +400,36 @@ export const getAdminStats = async (req, res) => {
     });
   }
 };
+
+// =======================================
+// GET NOTIFICATIONS
+// =======================================
+export const getNotifications =
+  async (req, res) => {
+
+    try {
+
+      const notifications =
+        await Notification.find()
+
+        .sort({
+          createdAt: -1,
+        })
+
+        .limit(20);
+
+      res.json({
+
+        success: true,
+
+        notifications,
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+
+        success: false,
+      });
+    }
+  };

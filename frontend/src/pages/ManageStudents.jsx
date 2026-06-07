@@ -96,7 +96,7 @@ function ManageStudents() {
   const filteredStudents =
     students.filter((student) =>
 
-      student.name
+      (student?.name || "")
         .toLowerCase()
         .includes(
           search.toLowerCase()
@@ -130,74 +130,71 @@ function ManageStudents() {
         />
 
 
-        {/* TABLE */}
-        <div style={styles.tableContainer}>
+        {/* STUDENT GRID */}
+        <div style={styles.studentGrid}>
 
+          {filteredStudents.map((student) => (
 
-          <table style={styles.table}>
+            <div
+              key={student._id}
+              style={styles.studentCard}
+            >
 
+              <div style={styles.avatar}>
+                {student.name?.charAt(0)}
+              </div>
 
-            <thead>
+              <h3>
+                {student.name}
+              </h3>
 
-              <tr>
+              <p>
+                📧 {student.email}
+              </p>
 
-                <th>Name</th>
+              <p>
+                📚 Courses:
+                {" "}
+                {student.enrolledCourses?.length || 0}
+              </p>
 
-                <th>Email</th>
+              <div style={styles.buttonRow}>
 
-                <th>Role</th>
+                <button
+                  style={styles.viewBtn}
+                  onClick={() => {
 
-                <th>Action</th>
+                    const courses =
+                      student.enrolledCourses
+                        ?.map(
+                          c => c.title
+                        )
+                        .join("\n");
 
-              </tr>
+                    alert(
+                      courses ||
+                      "No courses enrolled"
+                    );
 
-            </thead>
+                  }}
+                >
+                  View Details
+                </button>
 
+                <button
+                  style={styles.deleteBtn}
+                  onClick={() =>
+                    handleDelete(student._id)
+                  }
+                >
+                  Delete
+                </button>
 
-            <tbody>
+              </div>
 
+            </div>
 
-              {filteredStudents.map(
-                (student) => (
-
-                  <tr key={student._id}>
-
-                    <td>
-                      {student.name}
-                    </td>
-
-                    <td>
-                      {student.email}
-                    </td>
-
-                    <td>
-                      {student.role}
-                    </td>
-
-                    <td>
-
-                      <button
-
-                        style={styles.deleteBtn}
-
-                        onClick={() =>
-                          handleDelete(
-                            student._id
-                          )
-                        }
-                      >
-                        Delete
-                      </button>
-
-                    </td>
-
-                  </tr>
-                )
-              )}
-
-            </tbody>
-
-          </table>
+          ))}
 
         </div>
 
@@ -241,23 +238,78 @@ const styles = {
     color: "white",
   },
 
-  tableContainer: {
+  studentGrid: {
 
-    overflowX: "auto",
+    display: "grid",
+
+    gridTemplateColumns:
+      "repeat(auto-fill,minmax(320px,1fr))",
+
+    gap: "25px",
   },
 
-  table: {
-
-    width: "100%",
-
-    borderCollapse:
-      "collapse",
+  studentCard: {
 
     background: "#0f172a",
 
+    padding: "25px",
+
     borderRadius: "20px",
 
-    overflow: "hidden",
+    boxShadow:
+      "0 10px 25px rgba(0,0,0,0.2)",
+
+    color: "white",
+
+    transition: "0.3s",
+  },
+
+  avatar: {
+
+    width: "70px",
+
+    height: "70px",
+
+    borderRadius: "50%",
+
+    background:
+      "linear-gradient(135deg,#8b5cf6,#ec4899)",
+
+    display: "flex",
+
+    alignItems: "center",
+
+    justifyContent: "center",
+
+    fontSize: "28px",
+
+    fontWeight: "bold",
+
+    marginBottom: "15px",
+  },
+
+  buttonRow: {
+
+    display: "flex",
+
+    gap: "10px",
+
+    marginTop: "15px",
+  },
+
+  viewBtn: {
+
+    background: "#2563eb",
+
+    color: "white",
+
+    border: "none",
+
+    padding: "10px 16px",
+
+    borderRadius: "10px",
+
+    cursor: "pointer",
   },
 
   deleteBtn: {

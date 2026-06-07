@@ -36,9 +36,13 @@ function Courses() {
 
   // ================= ENROLL =================
   const handleEnroll = (course) => {
-    // 🔥 IF USER ALREADY LOGGED IN → DIRECT PLAYER
+    // 🔥 IF USER ALREADY LOGGED IN → DIRECT PAYMENT PAGE
     if (token) {
-      navigate(`/course-player/${course._id}`);
+      navigate("/payment", {
+        state: {
+          course,
+        },
+      });
       return;
     }
 
@@ -141,6 +145,9 @@ function Courses() {
         {courses.map((course) => (
           <div key={course._id} style={styles.card}>
             <h2>{course.title}</h2>
+            <p>
+              👨‍🏫 Instructor: {course.instructor?.name}
+            </p>
             <p>{course.description}</p>
             <p>₹{course.price}</p>
 

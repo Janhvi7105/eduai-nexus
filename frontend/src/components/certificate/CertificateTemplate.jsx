@@ -1,4 +1,5 @@
 import React from 'react';
+import signature from "../../assets/signature.png";
 
 function CertificateTemplate({ certificate }) {
   // Format date safely
@@ -27,7 +28,7 @@ function CertificateTemplate({ certificate }) {
   };
 
   return (
-    <div style={styles.wrapper}>
+    <div id="certificate" style={styles.wrapper}>
       <div style={styles.certificate}>
         {/* Decorative Borders */}
         <div style={styles.outerBorder}></div>
@@ -93,8 +94,13 @@ function CertificateTemplate({ certificate }) {
         {/* Footer Area */}
         <div style={styles.footerArea}>
           <div style={styles.footerLeft}>
+            <img
+              src={signature}
+              alt="Signature"
+              style={styles.signatureImage}
+            />
             <div style={styles.signatureLine}></div>
-            <div style={styles.signatureName}>{certData.instructorName}</div>
+            <div style={styles.signatureName}>EduAI Instructor</div>
             <div style={styles.signatureTitle}>INSTRUCTOR & PROGRAM DIRECTOR</div>
           </div>
           <div style={styles.footerCenter}>
@@ -169,7 +175,7 @@ const styles = {
     left: 0,
     right: 0,
     height: '12px',
-    background: 'linear-gradient(90deg, #b8860b, #ffd700, #daa520, #ffd700, #b8860b)',
+    background: '#d4af37',
     zIndex: 1
   },
 
@@ -179,7 +185,7 @@ const styles = {
     left: 0,
     right: 0,
     height: '12px',
-    background: 'linear-gradient(90deg, #b8860b, #ffd700, #daa520, #ffd700, #b8860b)',
+    background: '#d4af37',
     zIndex: 1
   },
 
@@ -304,7 +310,7 @@ const styles = {
   dividerLine: {
     width: '120px',
     height: '1px',
-    background: 'linear-gradient(90deg, transparent, #d4af37, transparent)'
+    background: '#d4af37'
   },
 
   dividerStar: {
@@ -343,9 +349,6 @@ const styles = {
     fontWeight: 700,
     fontFamily: "'Poppins', sans-serif",
     margin: '20px 0 12px',
-    background: 'linear-gradient(135deg, #1a3c34, #b8860b)',
-    WebkitBackgroundClip: 'text',
-    backgroundClip: 'text',
     color: '#1a3c34'
   },
 
@@ -398,6 +401,12 @@ const styles = {
   footerRight: {
     textAlign: 'center',
     flex: 1
+  },
+
+  signatureImage: {
+    width: "180px",
+    height: "auto",
+    marginBottom: "-10px",
   },
 
   signatureLine: {

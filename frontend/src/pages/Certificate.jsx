@@ -7,7 +7,7 @@ import axios from "axios";
 
 import jsPDF from "jspdf";
 
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
 
 import {
   useParams,
@@ -75,38 +75,46 @@ function Certificate() {
 
   // ================= DOWNLOAD PDF =================
   const downloadPDF = async () => {
+    try {
+      const node = document.getElementById("certificate");
 
-    const input =
-      document.getElementById(
-        "certificate"
-      );
+      if (!node) {
+        alert("Certificate not found");
+        return;
+      }
 
-    const canvas =
-      await html2canvas(input, {
-        scale: 2,
+      const dataUrl = await toPng(node, {
+        cacheBust: true,
+        pixelRatio: 2,
       });
 
-    const imgData =
-      canvas.toDataURL("image/png");
+      const pdf = new jsPDF(
+        "landscape",
+        "mm",
+        "a4"
+      );
 
-    const pdf = new jsPDF(
-      "landscape",
-      "px",
-      "a4"
-    );
+      const pdfWidth =
+        pdf.internal.pageSize.getWidth();
 
-    pdf.addImage(
-      imgData,
-      "PNG",
-      0,
-      0,
-      842,
-      595
-    );
+      const pdfHeight =
+        pdf.internal.pageSize.getHeight();
 
-    pdf.save(
-      "EduAI-Certificate.pdf"
-    );
+      pdf.addImage(
+        dataUrl,
+        "PNG",
+        0,
+        0,
+        pdfWidth,
+        pdfHeight
+      );
+
+      pdf.save("EduAI-Certificate.pdf");
+
+    } catch (err) {
+      console.error(err);
+      alert("PDF download failed");
+    }
   };
 
 

@@ -100,9 +100,49 @@ const courseSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    // ===============================
+    // ✅ ADMIN APPROVAL
+    // ===============================
+    approved: {
+      type: Boolean,
+      default: false,
+    },
+
+    // ===============================
+    // ⭐ FEATURED COURSE
+    // ===============================
+    featured: {
+      type: Boolean,
+      default: false,
+    },
+
+    // ===============================
+    // ⭐ COURSE RATING
+    // ===============================
+    rating: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 5,
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
+
+
+// ===============================
+// 👨‍🎓 TOTAL STUDENTS VIRTUAL
+// ===============================
+courseSchema.virtual(
+  "studentsCount"
+).get(function () {
+  return this.students?.length || 0;
+});
 
 
 // ===============================
@@ -114,22 +154,18 @@ courseSchema.pre(
 
     let count = 0;
 
-    if (
-      this.sections?.length > 0
-    ) {
+    if (this.sections?.length > 0) {
 
       this.sections.forEach(
         (section) => {
 
           count +=
-            section.lectures
-              ?.length || 0;
+            section.lectures?.length || 0;
         }
       );
     }
 
-    this.totalLectures =
-      count;
+    this.totalLectures = count;
   }
 );
 
@@ -137,10 +173,9 @@ courseSchema.pre(
 // ===============================
 // 🚀 EXPORT
 // ===============================
-const Course =
-  mongoose.model(
-    "Course",
-    courseSchema
-  );
+const Course = mongoose.model(
+  "Course",
+  courseSchema
+);
 
 export default Course;

@@ -29,6 +29,7 @@ import TeacherRegister from "./pages/TeacherRegister";
 import CreateCourse from "./pages/CreateCourse";
 import TeacherProfile from "./pages/TeacherProfile";
 import TeacherCourse from "./pages/TeacherCourse";
+import TeacherNotes from "./pages/TeacherNotes";
 
 
 // ================= 👨‍🎓 STUDENTS =================
@@ -42,7 +43,8 @@ import ManageStudents from "./pages/ManageStudents";
 import ManageTeachers from "./pages/ManageTeachers";
 import ManageCourses from "./pages/ManageCourses";
 import PendingTeachers from "./pages/PendingTeachers";  // ✅ ADDED
-
+import AdminProfile from "./pages/AdminProfile";  // ✅ ADDED FOR ADMIN PROFILE
+import Revenue from "./pages/Revenue";
 
 // ================= 🔔 NOTIFICATIONS =================
 import Notifications from "./pages/Notifications";
@@ -200,6 +202,25 @@ function App() {
           element={
             <ProtectedRoute>
               <ManageCourses />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/revenue"
+          element={
+            <ProtectedRoute>
+              <Revenue />
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* ✅ ADDED ADMIN PROFILE ROUTE */}
+        <Route
+          path="/admin-profile"
+          element={
+            <ProtectedRoute>
+              <AdminProfile />
             </ProtectedRoute>
           }
         />
@@ -383,6 +404,15 @@ function App() {
           element={
             <ProtectedRoute>
               <TeacherProfile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/teacher-notes"
+          element={
+            <ProtectedRoute>
+              <TeacherNotes />
             </ProtectedRoute>
           }
         />

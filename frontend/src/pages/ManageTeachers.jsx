@@ -17,6 +17,9 @@ function ManageTeachers() {
   const [search, setSearch] =
     useState("");
 
+  const [selectedTeacher, setSelectedTeacher] =
+    useState(null);
+
 
   // ================= FETCH TEACHERS =================
   useEffect(() => {
@@ -96,7 +99,7 @@ function ManageTeachers() {
   const filteredTeachers =
     teachers.filter((teacher) =>
 
-      teacher.name
+      (teacher?.name || "")
         .toLowerCase()
         .includes(
           search.toLowerCase()
@@ -201,18 +204,29 @@ function ManageTeachers() {
 
                     <td style={styles.td}>
 
-                      <button
+                      <>
+                        <button
+                          style={styles.viewBtn}
+                          onClick={() =>
+                            setSelectedTeacher(
+                              teacher
+                            )
+                          }
+                        >
+                          View
+                        </button>
 
-                        style={styles.deleteBtn}
-
-                        onClick={() =>
-                          handleDelete(
-                            teacher._id
-                          )
-                        }
-                      >
-                        Delete
-                      </button>
+                        <button
+                          style={styles.deleteBtn}
+                          onClick={() =>
+                            handleDelete(
+                              teacher._id
+                            )
+                          }
+                        >
+                          Delete
+                        </button>
+                      </>
 
                     </td>
 
@@ -227,6 +241,69 @@ function ManageTeachers() {
         </div>
 
       </div>
+
+      {selectedTeacher && (
+
+        <div style={styles.modalOverlay}>
+
+          <div style={styles.modal}>
+
+            <h2>
+              👨‍🏫 Teacher Profile
+            </h2>
+
+            <p>
+              <strong>Name:</strong>
+              {" "}
+              {selectedTeacher.name}
+            </p>
+
+            <p>
+              <strong>Email:</strong>
+              {" "}
+              {selectedTeacher.email}
+            </p>
+
+            <p>
+              <strong>Phone:</strong>
+              {" "}
+              {selectedTeacher.phone || "N/A"}
+            </p>
+
+            <p>
+              <strong>Skills:</strong>
+              {" "}
+              {selectedTeacher.skills || "N/A"}
+            </p>
+
+            <p>
+              <strong>Experience:</strong>
+              {" "}
+              {selectedTeacher.experience || "N/A"}
+            </p>
+
+            <p>
+              <strong>Bio:</strong>
+              {" "}
+              {selectedTeacher.bio || "N/A"}
+            </p>
+
+            <button
+              style={styles.closeBtn}
+              onClick={() =>
+                setSelectedTeacher(
+                  null
+                )
+              }
+            >
+              Close
+            </button>
+
+          </div>
+
+        </div>
+
+      )}
 
     </AdminLayout>
   );
@@ -334,6 +411,25 @@ const styles = {
     fontSize: "16px",
   },
 
+  viewBtn: {
+
+    background: "#2563eb",
+
+    color: "white",
+
+    border: "none",
+
+    padding: "10px 18px",
+
+    borderRadius: "10px",
+
+    cursor: "pointer",
+
+    marginRight: "10px",
+
+    fontWeight: "600",
+  },
+
   deleteBtn: {
 
     background:
@@ -350,5 +446,61 @@ const styles = {
     cursor: "pointer",
 
     fontWeight: "600",
+  },
+
+  modalOverlay: {
+
+    position: "fixed",
+
+    top: 0,
+
+    left: 0,
+
+    right: 0,
+
+    bottom: 0,
+
+    background:
+      "rgba(0,0,0,0.7)",
+
+    display: "flex",
+
+    justifyContent: "center",
+
+    alignItems: "center",
+
+    zIndex: 9999,
+  },
+
+  modal: {
+
+    background: "#0f172a",
+
+    color: "white",
+
+    padding: "30px",
+
+    borderRadius: "20px",
+
+    width: "500px",
+
+    maxWidth: "90%",
+  },
+
+  closeBtn: {
+
+    marginTop: "20px",
+
+    background: "#2563eb",
+
+    color: "white",
+
+    border: "none",
+
+    padding: "12px 20px",
+
+    borderRadius: "10px",
+
+    cursor: "pointer",
   },
 };

@@ -273,8 +273,9 @@ const styles = {
   grid: {
     display: "grid",
     gridTemplateColumns:
-      "repeat(auto-fit, minmax(420px, 1fr))",
-    gap: "25px",
+      "repeat(auto-fill, minmax(320px, 320px))",
+    gap: "20px",
+    justifyContent: "start",
   },
 
 
@@ -287,7 +288,11 @@ const styles = {
 
     borderRadius: "24px",
 
-    padding: "28px",
+    padding: "20px",
+
+    width: "320px",
+
+    minHeight: "300px",
 
     border:
       "1px solid rgba(255,255,255,0.08)",
@@ -333,7 +338,7 @@ const styles = {
   },
 
   studentName: {
-    fontSize: "28px",
+    fontSize: "22px",
     fontWeight: "bold",
     marginBottom: "6px",
     color: "var(--text-color)",

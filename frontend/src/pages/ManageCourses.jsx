@@ -14,6 +14,12 @@ function ManageCourses() {
   const [courses, setCourses] =
     useState([]);
 
+  const [search, setSearch] =
+    useState("");
+
+  const [selectedCourse, setSelectedCourse] =
+    useState(null);
+
 
   // ================= FETCH COURSES =================
   useEffect(() => {
@@ -89,72 +95,23 @@ function ManageCourses() {
     };
 
 
-  // ================= APPROVE =================
-  const handleApprove =
-    async (id) => {
-
-      try {
-
-        const token =
-          localStorage.getItem(
-            "token"
-          );
-
-        await axios.put(
-
-          `http://localhost:5000/api/admin/courses/approve/${id}`,
-
-          {},
-
-          {
-            headers: {
-              Authorization:
-                `Bearer ${token}`,
-            },
-          }
-        );
-
-        fetchCourses();
-
-      } catch (error) {
-
-        console.log(error);
-      }
-    };
+  // ================= SEARCH FILTER =================
+  const filteredCourses =
+    courses.filter((course) =>
+      course.title
+        .toLowerCase()
+        .includes(search.toLowerCase())
+    );
 
 
-  // ================= FEATURE =================
-  const handleFeature =
-    async (id) => {
-
-      try {
-
-        const token =
-          localStorage.getItem(
-            "token"
-          );
-
-        await axios.put(
-
-          `http://localhost:5000/api/admin/courses/feature/${id}`,
-
-          {},
-
-          {
-            headers: {
-              Authorization:
-                `Bearer ${token}`,
-            },
-          }
-        );
-
-        fetchCourses();
-
-      } catch (error) {
-
-        console.log(error);
-      }
-    };
+  // ================= STATS =================
+  const totalEnrollments =
+    courses.reduce(
+      (sum, course) =>
+        sum +
+        (course.studentsEnrolled?.length || 0),
+      0
+    );
 
 
   return (
@@ -169,86 +126,95 @@ function ManageCourses() {
         </h1>
 
 
+        {/* STATS CARDS */}
+        <div style={styles.stats}>
+
+          <div style={styles.statCard}>
+            <h2>{courses.length}</h2>
+            <p>Total Courses</p>
+          </div>
+
+          <div style={styles.statCard}>
+            <h2>{totalEnrollments}</h2>
+            <p>Total Enrollments</p>
+          </div>
+
+        </div>
+
+
+        {/* SEARCH */}
+        <input
+          type="text"
+          placeholder="Search courses..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+          style={styles.search}
+        />
+
+
+        {/* COURSES GRID */}
         <div style={styles.grid}>
 
-
-          {courses.map((course) => (
+          {filteredCourses.map((course) => (
 
             <div
               key={course._id}
               style={styles.card}
             >
 
+              {/* THUMBNAIL */}
+              <img
+                src={course.thumbnail}
+                alt={course.title}
+                style={styles.thumbnail}
+              />
+
               <h2>
                 {course.title}
               </h2>
 
               <p>
-                👨‍🏫 {
-                  course.teacher?.name
-                }
+                👨‍🏫 Instructor:
+                {course.teacher?.name || course.instructor?.name || "Unknown"}
               </p>
 
               <p>
-                💰 ₹{course.price}
+                💰 Price:
+                ₹{course.price}
               </p>
 
               <p>
-                ✅ Approved:
-                {" "}
-                {
-                  course.approved
-                    ? "Yes"
-                    : "No"
-                }
+                👨‍🎓 Students:
+                {course.studentsEnrolled?.length || 0}
               </p>
 
               <p>
-                ⭐ Featured:
-                {" "}
-                {
-                  course.featured
-                    ? "Yes"
-                    : "No"
-                }
+                📅 Created:
+                {new Date(course.createdAt)
+                  .toLocaleDateString()}
+              </p>
+
+              <p>
+                ⭐ Rating:
+                {course.rating || 0} / 5
               </p>
 
 
               <div style={styles.buttons}>
 
-
                 <button
-
-                  style={styles.approveBtn}
-
+                  style={styles.viewBtn}
                   onClick={() =>
-                    handleApprove(
-                      course._id
-                    )
+                    setSelectedCourse(course)
                   }
                 >
-                  Approve
+                  View
                 </button>
 
-
                 <button
-
-                  style={styles.featureBtn}
-
-                  onClick={() =>
-                    handleFeature(
-                      course._id
-                    )
-                  }
-                >
-                  Feature
-                </button>
-
-
-                <button
-
                   style={styles.deleteBtn}
-
                   onClick={() =>
                     handleDelete(
                       course._id
@@ -267,6 +233,102 @@ function ManageCourses() {
 
       </div>
 
+      {/* VIEW COURSE MODAL */}
+      {selectedCourse && (
+
+        <div style={styles.modalOverlay}>
+
+          <div style={styles.modal}>
+
+            <h2 style={styles.modalHeading}>
+              📖 Course Details
+            </h2>
+
+            <img
+              src={selectedCourse.thumbnail}
+              alt={selectedCourse.title}
+              style={styles.modalThumbnail}
+            />
+
+            <p>
+              <strong>Course Name:</strong>
+              {" "}
+              {selectedCourse.title}
+            </p>
+
+            <p>
+              <strong>Instructor:</strong>
+              {" "}
+              {selectedCourse.teacher?.name || selectedCourse.instructor?.name || "Unknown"}
+            </p>
+
+            <p>
+              <strong>Price:</strong>
+              {" "}
+              ₹{selectedCourse.price}
+            </p>
+
+            <p>
+              <strong>Students Enrolled:</strong>
+              {" "}
+              {selectedCourse.studentsEnrolled?.length || 0}
+            </p>
+
+            <p>
+              <strong>Created Date:</strong>
+              {" "}
+              {new Date(selectedCourse.createdAt)
+                .toLocaleDateString()}
+            </p>
+
+            <p>
+              <strong>Rating:</strong>
+              {" "}
+              ⭐ {selectedCourse.rating || 0} / 5
+            </p>
+
+            <p>
+              <strong>Modules:</strong>
+              {" "}
+              {selectedCourse.modules?.length || 0}
+            </p>
+
+            <p>
+              <strong>Lectures:</strong>
+              {" "}
+              {selectedCourse.modules?.reduce(
+                (total, module) =>
+                  total + (module.lectures?.length || 0),
+                0
+              ) || 0}
+            </p>
+
+            <p>
+              <strong>Description:</strong>
+            </p>
+            <p style={styles.description}>
+              {selectedCourse.description || "No description available"}
+            </p>
+
+            <div style={styles.modalButtons}>
+
+              <button
+                style={styles.closeBtn}
+                onClick={() =>
+                  setSelectedCourse(null)
+                }
+              >
+                Close
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      )}
+
     </AdminLayout>
   );
 }
@@ -284,6 +346,32 @@ const styles = {
   heading: {
     fontSize: "42px",
     marginBottom: "30px",
+  },
+
+  stats: {
+    display: "flex",
+    gap: "20px",
+    marginBottom: "30px",
+    flexWrap: "wrap",
+  },
+
+  statCard: {
+    background: "#0f172a",
+    padding: "25px",
+    borderRadius: "20px",
+    minWidth: "200px",
+  },
+
+  search: {
+    width: "100%",
+    padding: "16px",
+    borderRadius: "14px",
+    border: "1px solid #334155",
+    marginBottom: "30px",
+    fontSize: "16px",
+    background: "#1e293b",
+    color: "white",
+    outline: "none",
   },
 
   grid: {
@@ -308,6 +396,14 @@ const styles = {
       "1px solid #1e293b",
   },
 
+  thumbnail: {
+    width: "100%",
+    height: "180px",
+    objectFit: "cover",
+    borderRadius: "16px",
+    marginBottom: "15px",
+  },
+
   buttons: {
 
     display: "flex",
@@ -319,33 +415,12 @@ const styles = {
     flexWrap: "wrap",
   },
 
-  approveBtn: {
-
-    background: "#10b981",
-
+  viewBtn: {
+    background: "#8b5cf6",
     color: "white",
-
     border: "none",
-
     padding: "10px 16px",
-
     borderRadius: "10px",
-
-    cursor: "pointer",
-  },
-
-  featureBtn: {
-
-    background: "#2563eb",
-
-    color: "white",
-
-    border: "none",
-
-    padding: "10px 16px",
-
-    borderRadius: "10px",
-
     cursor: "pointer",
   },
 
@@ -362,5 +437,65 @@ const styles = {
     borderRadius: "10px",
 
     cursor: "pointer",
+  },
+
+  modalOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: "rgba(0,0,0,0.8)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 9999,
+    overflowY: "auto",
+  },
+
+  modal: {
+    background: "#0f172a",
+    color: "white",
+    padding: "30px",
+    borderRadius: "20px",
+    width: "600px",
+    maxWidth: "90%",
+    maxHeight: "90vh",
+    overflowY: "auto",
+  },
+
+  modalHeading: {
+    fontSize: "28px",
+    marginBottom: "20px",
+  },
+
+  modalThumbnail: {
+    width: "100%",
+    height: "200px",
+    objectFit: "cover",
+    borderRadius: "16px",
+    marginBottom: "20px",
+  },
+
+  description: {
+    marginTop: "10px",
+    lineHeight: "1.6",
+    color: "#cbd5e1",
+  },
+
+  modalButtons: {
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop: "20px",
+  },
+
+  closeBtn: {
+    background: "#2563eb",
+    color: "white",
+    border: "none",
+    padding: "12px 24px",
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontSize: "16px",
   },
 };

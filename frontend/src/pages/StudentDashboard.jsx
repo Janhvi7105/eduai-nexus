@@ -21,6 +21,8 @@ import {
   Bell,
 } from "lucide-react";
 
+import Chatbot from "../components/student/Chatbot";
+
 
 function StudentDashboard() {
 
@@ -47,15 +49,21 @@ function StudentDashboard() {
 
         try {
 
-          const email =
-            localStorage.getItem(
-              "email"
-            );
-
           const token =
             localStorage.getItem(
               "token"
             );
+
+          const user =
+            JSON.parse(
+              localStorage.getItem("user")
+            );
+
+          const email = user?.email;
+
+          // Debugging
+          console.log("TOKEN =", token);
+          console.log("EMAIL =", email);
 
           if (
             !email ||
@@ -178,7 +186,7 @@ function StudentDashboard() {
               navigate("/my-courses")
             }
           >
-            ▶ Continue Learning
+            My Courses 📚
           </button>
 
         </div>
@@ -470,6 +478,8 @@ function StudentDashboard() {
         )}
 
       </div>
+
+      <Chatbot />
 
     </Layout>
   );

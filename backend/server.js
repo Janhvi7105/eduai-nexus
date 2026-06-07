@@ -1,6 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config(); // ✅ MUST BE FIRST
 
+console.log("GEMINI =", process.env.GEMINI_API_KEY);
+
+import express from "express";
+import path from "path";
 import app from "./app.js";
 
 import connectDB
@@ -57,6 +61,13 @@ from "./routes/adminRoutes.js";
 import courseAdminRoutes
 from "./routes/courseAdminRoutes.js";
 
+// 📖 NOTES
+import noteRoutes
+from "./routes/noteRoutes.js";
+
+// 🤖 CHATBOT - ADD THIS LINE
+import chatbotRoutes from "./routes/chatbotRoutes.js";
+
 
 // ================= DEBUG LOGS =================
 console.log(
@@ -81,6 +92,21 @@ console.log(
 
 // ================= CONNECT DATABASE =================
 connectDB();
+
+app.use(
+  "/uploads",
+  express.static(
+    path.join(process.cwd(), "uploads"),
+    {
+      setHeaders: (res) => {
+        res.setHeader(
+          "Content-Disposition",
+          "attachment"
+        );
+      },
+    }
+  )
+);
 
 
 // ================= ROUTES =================
@@ -153,6 +179,16 @@ app.use(
   "/api/mocktest",
   mockTestRoutes
 );
+
+
+// 📖 NOTES
+app.use(
+  "/api/notes",
+  noteRoutes
+);
+
+// 🤖 CHATBOT - ADD THIS LINE
+app.use("/api/chatbot", chatbotRoutes);
 
 
 // 👑 ADMIN USER MANAGEMENT

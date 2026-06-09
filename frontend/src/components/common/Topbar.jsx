@@ -5,6 +5,8 @@ import {
 function Topbar({
   theme,
   setTheme,
+  sidebarOpen,
+  setSidebarOpen,
 }) {
 
   const navigate =
@@ -14,6 +16,10 @@ function Topbar({
     JSON.parse(
       localStorage.getItem("user")
     ) || {};
+
+  // ================= MOBILE DETECTION =================
+  const isMobile =
+    window.innerWidth <= 768;
 
 
   return (
@@ -41,6 +47,21 @@ function Topbar({
       }}
     >
 
+      {/* ================= MENU BUTTON (HAMBURGER) ================= */}
+      <div
+        style={styles.menuBtn}
+        onClick={() =>
+          setSidebarOpen(!sidebarOpen)
+        }
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = "scale(1.05)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = "scale(1)";
+        }}
+      >
+        ☰
+      </div>
 
       {/* ================= RIGHT SECTION ================= */}
       <div style={styles.right}>
@@ -146,23 +167,25 @@ function Topbar({
 
 
           {/* ================= NAME ================= */}
-          <span
-            style={{
-              ...styles.name,
+          {!isMobile && (
+            <span
+              style={{
+                ...styles.name,
 
-              color:
-                theme === "dark"
-                  ? "#ffffff"
-                  : "#111827",
-            }}
-          >
+                color:
+                  theme === "dark"
+                    ? "#ffffff"
+                    : "#111827",
+              }}
+            >
 
-            {
-              user?.name ||
-              "Admin"
-            }
+              {
+                user?.name ||
+                "Admin"
+              }
 
-          </span>
+            </span>
+          )}
 
         </div>
 
@@ -186,7 +209,7 @@ const styles = {
 
     display: "flex",
 
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
 
     alignItems: "center",
 
@@ -197,13 +220,27 @@ const styles = {
     transition: "0.3s",
   },
 
+  menuBtn: {
+    width: "50px",
+    height: "50px",
+    borderRadius: "12px",
+    background: "#111827",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    color: "white",
+    fontSize: "24px",
+    transition: "all 0.3s ease",
+  },
+
   right: {
 
     display: "flex",
 
     alignItems: "center",
 
-    gap: "20px",
+    gap: "10px",
   },
 
   iconBox: {

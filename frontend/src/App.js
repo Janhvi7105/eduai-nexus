@@ -45,6 +45,7 @@ import ManageCourses from "./pages/ManageCourses";
 import PendingTeachers from "./pages/PendingTeachers";  // ✅ ADDED
 import AdminProfile from "./pages/AdminProfile";  // ✅ ADDED FOR ADMIN PROFILE
 
+
 // ================= 🔔 NOTIFICATIONS =================
 import Notifications from "./pages/Notifications";
 
@@ -68,7 +69,7 @@ import CoursePlayer from "./pages/CoursePlayer";
 import MyCourses from "./pages/MyCourses";
 import Resources from "./pages/Resources";
 import Notes from "./pages/Notes";
-import Inbox from "./pages/Inbox";
+// ❌ REMOVED: import Inbox from "./pages/Inbox";
 
 
 // ================= 👤 PROFILE =================
@@ -339,14 +340,15 @@ function App() {
           }
         />
 
-        <Route
+        {/* ❌ REMOVED INBOX ROUTE */}
+        {/* <Route
           path="/inbox"
           element={
             <ProtectedRoute>
               <Inbox />
             </ProtectedRoute>
           }
-        />
+        /> */}
 
 
         {/* ================================================= */}

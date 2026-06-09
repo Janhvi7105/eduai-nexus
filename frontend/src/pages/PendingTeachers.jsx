@@ -14,6 +14,9 @@ function PendingTeachers() {
   const [teachers, setTeachers] =
     useState([]);
 
+  // ================= MOBILE DETECTION =================
+  const isMobile =
+    window.innerWidth <= 768;
 
   // ================= FETCH PENDING TEACHERS =================
   useEffect(() => {
@@ -134,7 +137,13 @@ function PendingTeachers() {
         <div style={styles.header}>
 
 
-          <h1 style={styles.heading}>
+          <h1
+            style={{
+              ...styles.heading,
+              fontSize:
+                isMobile ? "28px" : "42px",
+            }}
+          >
             👨‍🏫 Pending Instructor Requests
           </h1>
 
@@ -165,14 +174,30 @@ function PendingTeachers() {
 
 
         {/* ================= TEACHERS GRID ================= */}
-        <div style={styles.grid}>
+        <div
+          style={{
+            ...styles.grid,
+            gridTemplateColumns:
+              isMobile
+                ? "1fr"
+                : "repeat(auto-fit,minmax(320px,1fr))",
+          }}
+        >
 
 
           {teachers.map((teacher) => (
 
             <div
               key={teacher._id}
-              style={styles.card}
+              style={{
+                ...styles.card,
+                padding:
+                  isMobile
+                    ? "20px"
+                    : "30px",
+                width: "100%",
+                boxSizing: "border-box",
+              }}
             >
 
               {/* AVATAR */}
@@ -189,7 +214,10 @@ function PendingTeachers() {
                 {teacher.name}
               </h2>
 
-              <p style={styles.email}>
+              <p style={{
+                ...styles.email,
+                wordBreak: "break-word",
+              }}>
                 {teacher.email}
               </p>
 
@@ -201,7 +229,10 @@ function PendingTeachers() {
 
 
               {/* BUTTONS */}
-              <div style={styles.buttonRow}>
+              <div style={{
+                ...styles.buttonRow,
+                flexWrap: "wrap",
+              }}>
 
 
                 {/* APPROVE */}
@@ -296,9 +327,6 @@ const styles = {
 
     display: "grid",
 
-    gridTemplateColumns:
-      "repeat(auto-fit,minmax(320px,1fr))",
-
     gap: "24px",
   },
 
@@ -310,8 +338,6 @@ const styles = {
       "1px solid #1e293b",
 
     borderRadius: "24px",
-
-    padding: "30px",
 
     textAlign: "center",
 

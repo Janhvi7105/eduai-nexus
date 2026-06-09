@@ -15,6 +15,30 @@ function Layout({ children }) {
       || "light"
     );
 
+  // ================= MOBILE DETECTION =================
+  const [isMobile, setIsMobile] =
+    useState(window.innerWidth <= 768);
+
+  // ================= SIDEBAR STATE =================
+  const [sidebarOpen, setSidebarOpen] =
+    useState(true);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener(
+      "resize",
+      handleResize
+    );
+
+    return () =>
+      window.removeEventListener(
+        "resize",
+        handleResize
+      );
+  }, []);
 
   // ================= APPLY THEME =================
   useEffect(() => {
@@ -39,7 +63,6 @@ function Layout({ children }) {
 
   }, [theme]);
 
-
   return (
 
     <div
@@ -62,11 +85,25 @@ function Layout({ children }) {
       <Sidebar
         theme={theme}
         setTheme={setTheme}
+        isMobile={isMobile}
+        sidebarOpen={sidebarOpen}
       />
 
 
       {/* ================= MAIN ================= */}
-      <div style={styles.main}>
+      <div
+        style={{
+          ...styles.main,
+          marginLeft: sidebarOpen
+            ? (isMobile ? "80px" : "240px")
+            : "0px",
+          width: "100%",
+          padding: isMobile
+            ? "10px"
+            : "20px",
+          transition: "all 0.3s ease",
+        }}
+      >
 
 
         {/* ================= TOPBAR ================= */}
@@ -94,6 +131,8 @@ function Layout({ children }) {
           <Topbar
             theme={theme}
             setTheme={setTheme}
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
           />
 
         </div>
@@ -137,7 +176,7 @@ const styles = {
     marginLeft: "240px",
     width: "100%",
     minHeight: "100vh",
-    transition: "0.3s",
+    transition: "all 0.3s ease",
     padding: "20px",
   },
 

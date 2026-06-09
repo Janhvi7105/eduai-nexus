@@ -20,6 +20,9 @@ function ManageCourses() {
   const [selectedCourse, setSelectedCourse] =
     useState(null);
 
+  // ================= MOBILE DETECTION =================
+  const isMobile =
+    window.innerWidth <= 768;
 
   // ================= FETCH COURSES =================
   useEffect(() => {
@@ -121,7 +124,13 @@ function ManageCourses() {
       <div style={styles.page}>
 
 
-        <h1 style={styles.heading}>
+        <h1
+          style={{
+            ...styles.heading,
+            fontSize:
+              isMobile ? "28px" : "42px",
+          }}
+        >
           📚 Manage Courses
         </h1>
 
@@ -129,12 +138,18 @@ function ManageCourses() {
         {/* STATS CARDS */}
         <div style={styles.stats}>
 
-          <div style={styles.statCard}>
+          <div style={{
+            ...styles.statCard,
+            flex: 1,
+          }}>
             <h2>{courses.length}</h2>
             <p>Total Courses</p>
           </div>
 
-          <div style={styles.statCard}>
+          <div style={{
+            ...styles.statCard,
+            flex: 1,
+          }}>
             <h2>{totalEnrollments}</h2>
             <p>Total Enrollments</p>
           </div>
@@ -155,7 +170,15 @@ function ManageCourses() {
 
 
         {/* COURSES GRID */}
-        <div style={styles.grid}>
+        <div
+          style={{
+            ...styles.grid,
+            gridTemplateColumns:
+              isMobile
+                ? "1fr"
+                : "repeat(auto-fit,minmax(320px,1fr))",
+          }}
+        >
 
           {filteredCourses.map((course) => (
 
@@ -168,7 +191,11 @@ function ManageCourses() {
               <img
                 src={course.thumbnail}
                 alt={course.title}
-                style={styles.thumbnail}
+                style={{
+                  ...styles.thumbnail,
+                  height:
+                    isMobile ? "140px" : "180px",
+                }}
               />
 
               <h2>
@@ -238,7 +265,12 @@ function ManageCourses() {
 
         <div style={styles.modalOverlay}>
 
-          <div style={styles.modal}>
+          <div style={{
+            ...styles.modal,
+            padding: isMobile ? "20px" : "30px",
+            width: "90%",
+            maxWidth: "600px",
+          }}>
 
             <h2 style={styles.modalHeading}>
               📖 Course Details
@@ -372,14 +404,12 @@ const styles = {
     background: "#1e293b",
     color: "white",
     outline: "none",
+    boxSizing: "border-box",
   },
 
   grid: {
 
     display: "grid",
-
-    gridTemplateColumns:
-      "repeat(auto-fit,minmax(320px,1fr))",
 
     gap: "24px",
   },
@@ -462,6 +492,7 @@ const styles = {
     maxWidth: "90%",
     maxHeight: "90vh",
     overflowY: "auto",
+    boxSizing: "border-box",
   },
 
   modalHeading: {

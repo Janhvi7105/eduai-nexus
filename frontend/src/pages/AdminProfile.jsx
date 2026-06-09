@@ -18,6 +18,9 @@ function AdminProfile() {
   const [password, setPassword] =
     useState("");
 
+  // ================= MOBILE DETECTION =================
+  const isMobile = window.innerWidth <= 768;
+
   const updateProfile = () => {
 
     const updatedUser = {
@@ -43,14 +46,20 @@ function AdminProfile() {
     <AdminLayout darkMode={darkMode}>
 
       <div style={styles.container}>
-        <div style={styles.card}>
+        <div style={{
+          ...styles.card,
+          width: isMobile ? "100%" : "500px",
+        }}>
 
           {/* Avatar */}
           <div style={styles.avatar}>
             {name ? name[0].toUpperCase() : "A"}
           </div>
 
-          <h1 style={styles.heading}>
+          <h1 style={{
+            ...styles.heading,
+            fontSize: isMobile ? "28px" : "48px",
+          }}>
             Admin Profile
           </h1>
 

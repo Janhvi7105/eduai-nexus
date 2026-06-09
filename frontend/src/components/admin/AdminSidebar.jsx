@@ -2,40 +2,56 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
+import { useState } from "react";
 
-function AdminSidebar({ darkMode }) {
-
+function AdminSidebar({
+  darkMode,
+  isMobile,
+  sidebarCollapsed,
+  setSidebarCollapsed,
+}) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [hoveredItem, setHoveredItem] = useState(null);
 
   // ================= MENU ITEMS =================
   const menuItems = [
     {
       title: "Dashboard",
       icon: "📊",
+      activeIcon: "✨",
       path: "/admin-dashboard",
+      description: "Overview & stats"
     },
     {
       title: "Students",
       icon: "👨‍🎓",
+      activeIcon: "🎓",
       path: "/manage-students",
+      description: "Manage learners"
     },
     {
       title: "Teachers",
       icon: "👨‍🏫",
+      activeIcon: "🏆",
       path: "/manage-teachers",
+      description: "Educator management"
     },
     {
       title: "Pending Requests",
       icon: "⏳",
+      activeIcon: "📋",
       path: "/pending-teachers",
+      description: "Approvals needed"
+      // badge removed
     },
     {
       title: "Courses",
       icon: "📚",
+      activeIcon: "📖",
       path: "/manage-courses",
+      description: "Course catalog"
     },
-
   ];
 
   // ================= LOGOUT =================
@@ -45,82 +61,140 @@ function AdminSidebar({ darkMode }) {
     navigate("/login");
   };
 
+  const isExpanded = !isMobile && !sidebarCollapsed;
+  const sidebarWidth = isMobile ? "80px" : (sidebarCollapsed ? "80px" : "280px");
+
   return (
     <div
       style={{
         ...styles.sidebar,
-        background: darkMode ? "#020617" : "#ffffff",
-        color: darkMode ? "#ffffff" : "#111827",
+        width: sidebarWidth,
+        background: darkMode
+          ? "linear-gradient(180deg, #0f172a 0%, #020617 100%)"
+          : "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
         borderRight: darkMode
-          ? "1px solid #1e293b"
-          : "1px solid #e5e7eb",
+          ? "1px solid rgba(255, 255, 255, 0.05)"
+          : "1px solid rgba(0, 0, 0, 0.05)",
+        boxShadow: darkMode
+          ? "4px 0 20px rgba(0, 0, 0, 0.3)"
+          : "4px 0 20px rgba(0, 0, 0, 0.05)",
       }}
     >
-
-      {/* ================= TOP ================= */}
+      {/* ================= TOP SECTION ================= */}
       <div>
-
         {/* ================= LOGO ================= */}
-        <div
-          style={{
-            ...styles.logo,
-            color: darkMode ? "#ffffff" : "#111827",
-          }}
-        >
-          🎓 EduAI
-          <br />
-          Admin
+        <div style={styles.logoContainer}>
+          <div
+            style={{
+              ...styles.logoWrapper,
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            }}
+          >
+            <span style={styles.logoEmoji}>🎓</span>
+          </div>
+          {isExpanded && (
+            <div style={styles.logoText}>
+              <span style={styles.logoMain}>EduAI</span>
+              <span style={styles.logoSub}>Admin Panel</span>
+            </div>
+          )}
+          {!isMobile && (
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              style={{
+                ...styles.collapseBtn,
+                background: darkMode ? "#1e293b" : "#f1f5f9",
+                color: darkMode ? "#94a3b8" : "#64748b",
+              }}
+            >
+              {sidebarCollapsed ? "→" : "←"}
+            </button>
+          )}
         </div>
 
         {/* ================= MENU ================= */}
         <div style={styles.menu}>
-
-          {menuItems.map((item) => (
-
-            <div
-              key={item.title}
-              onClick={() => navigate(item.path)}
-              style={{
-                ...styles.menuItem,
-
-                background:
-                  location.pathname === item.path
-                    ? "#2563eb"
+          {menuItems.map((item, index) => {
+            const isActive = location.pathname === item.path;
+            const isHovered = hoveredItem === index;
+            
+            return (
+              <div
+                key={item.title}
+                onClick={() => navigate(item.path)}
+                onMouseEnter={() => setHoveredItem(index)}
+                onMouseLeave={() => setHoveredItem(null)}
+                style={{
+                  ...styles.menuItem,
+                  justifyContent: isMobile || sidebarCollapsed ? "center" : "flex-start",
+                  background: isActive
+                    ? darkMode
+                      ? "rgba(102, 126, 234, 0.15)"
+                      : "rgba(102, 126, 234, 0.08)"
+                    : isHovered
+                    ? darkMode
+                      ? "rgba(255, 255, 255, 0.05)"
+                      : "rgba(0, 0, 0, 0.03)"
                     : "transparent",
-
-                color:
-                  location.pathname === item.path
-                    ? "#ffffff"
-                    : darkMode
-                    ? "#ffffff"
-                    : "#111827",
-              }}
-            >
-
-              <span style={styles.icon}>
-                {item.icon}
-              </span>
-
-              <span>
-                {item.title}
-              </span>
-
-            </div>
-
-          ))}
-
+                  borderLeft: isActive ? "4px solid #667eea" : "4px solid transparent",
+                  transform: isHovered ? "translateX(4px)" : "translateX(0)",
+                }}
+              >
+                <div style={styles.iconWrapper}>
+                  <span style={styles.icon}>
+                    {isActive ? item.activeIcon || item.icon : item.icon}
+                  </span>
+                </div>
+                
+                {isExpanded && (
+                  <div style={styles.menuText}>
+                    <div style={{
+                      ...styles.menuTitle,
+                      color: isActive
+                        ? "#667eea"
+                        : darkMode
+                        ? "#cbd5e1"
+                        : "#334155",
+                      fontWeight: isActive ? "700" : "500",
+                    }}>
+                      {item.title}
+                    </div>
+                    <div style={styles.menuDescription}>
+                      {item.description}
+                    </div>
+                  </div>
+                )}
+                
+                {isActive && !isExpanded && (
+                  <div style={styles.activeDot}></div>
+                )}
+              </div>
+            );
+          })}
         </div>
-
       </div>
 
-      {/* ================= LOGOUT ================= */}
-      <button
-        style={styles.logoutBtn}
-        onClick={handleLogout}
-      >
-        🚪 Logout
-      </button>
-
+      {/* ================= BOTTOM SECTION ================= */}
+      <div>
+        {/* Logout Button - Profile Section Removed */}
+        <button
+          style={{
+            ...styles.logoutBtn,
+            justifyContent: isMobile || sidebarCollapsed ? "center" : "flex-start",
+            background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+          }}
+          onClick={handleLogout}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "translateX(4px)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "translateX(0)";
+          }}
+        >
+          <span style={styles.logoutIcon}>🚪</span>
+          {isExpanded && <span>Logout</span>}
+        </button>
+      </div>
     </div>
   );
 }
@@ -129,63 +203,176 @@ export default AdminSidebar;
 
 // ================= STYLES =================
 const styles = {
-
   sidebar: {
-    width: "270px",
     height: "100vh",
     position: "fixed",
     left: 0,
     top: 0,
-    padding: "28px 20px",
+    padding: "24px 16px",
     boxSizing: "border-box",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     overflowY: "auto",
-    transition: "all 0.3s ease",
+    overflowX: "hidden",
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+    zIndex: 1000,
   },
 
-  logo: {
-    fontSize: "34px",
+  logoContainer: {
+    marginBottom: "40px",
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    padding: "0 8px",
+  },
+
+  logoWrapper: {
+    width: "48px",
+    height: "48px",
+    borderRadius: "16px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
+    flexShrink: 0,
+  },
+
+  logoEmoji: {
+    fontSize: "28px",
+  },
+
+  logoText: {
+    flex: 1,
+  },
+
+  logoMain: {
+    display: "block",
+    fontSize: "18px",
     fontWeight: "800",
-    marginBottom: "45px",
-    lineHeight: "1.3",
-    textAlign: "center",
-    transition: "all 0.3s ease",
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    letterSpacing: "-0.5px",
+  },
+
+  logoSub: {
+    display: "block",
+    fontSize: "10px",
+    color: "#94a3b8",
+    marginTop: "2px",
+  },
+
+  collapseBtn: {
+    position: "absolute",
+    right: "-8px",
+    top: "12px",
+    width: "24px",
+    height: "24px",
+    borderRadius: "12px",
+    border: "none",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "12px",
+    transition: "all 0.2s ease",
+    zIndex: 10,
   },
 
   menu: {
     display: "flex",
     flexDirection: "column",
-    gap: "16px",
+    gap: "8px",
   },
 
   menuItem: {
     display: "flex",
     alignItems: "center",
-    gap: "15px",
-    padding: "18px",
-    borderRadius: "18px",
+    gap: "12px",
+    padding: "12px 16px",
+    borderRadius: "14px",
     cursor: "pointer",
-    fontSize: "18px",
-    fontWeight: "600",
-    transition: "all 0.3s ease",
+    transition: "all 0.2s ease",
+    position: "relative",
+    textDecoration: "none",
+  },
+
+  iconWrapper: {
+    width: "32px",
+    height: "32px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
   },
 
   icon: {
-    fontSize: "22px",
+    fontSize: "20px",
+    transition: "transform 0.2s ease",
+  },
+
+  menuText: {
+    flex: 1,
+    textAlign: "left",
+  },
+
+  menuTitle: {
+    fontSize: "14px",
+    fontWeight: "500",
+    transition: "color 0.2s ease",
+  },
+
+  menuDescription: {
+    fontSize: "11px",
+    color: "#94a3b8",
+    marginTop: "2px",
+  },
+
+  activeDot: {
+    width: "6px",
+    height: "6px",
+    borderRadius: "3px",
+    background: "#667eea",
+    position: "absolute",
+    right: "12px",
   },
 
   logoutBtn: {
-    background:
-      "linear-gradient(135deg,#ef4444,#dc2626)",
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
     border: "none",
     color: "white",
-    padding: "18px",
-    borderRadius: "18px",
+    padding: "12px 16px",
+    borderRadius: "14px",
     cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: "600",
+    transition: "all 0.2s ease",
+    width: "100%",
+  },
+
+  logoutIcon: {
     fontSize: "18px",
-    fontWeight: "700",
-    marginTop: "30px",
   },
 };
+
+// Add hover styles
+const styleSheet = document.createElement("style");
+styleSheet.textContent = `
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+  
+  .menu-item:hover .icon {
+    transform: scale(1.1);
+  }
+`;
+document.head.appendChild(styleSheet);

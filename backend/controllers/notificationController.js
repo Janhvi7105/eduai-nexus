@@ -1,96 +1,46 @@
 import Notification from "../models/Notification.js";
 
+export const getNotifications =
+  async (req, res) => {
 
-// =====================================
-// 🔔 GET NOTIFICATIONS
-// =====================================
-export const getNotifications = async (
-  req,
-  res
-) => {
+    try {
 
-  try {
+      const notifications =
+        await Notification.find()
+          .sort({ createdAt: -1 })
+          .limit(10);
 
-    const notifications =
-      await Notification.find({
-        userId: req.user._id,
-      })
-        .sort({ createdAt: -1 });
+      res.json({
+        success: true,
+        notifications,
+      });
 
-    return res.status(200).json({
+    } catch (error) {
 
-      success: true,
-
-      notifications,
-    });
-
-  } catch (error) {
-
-    console.error(
-      "NOTIFICATION ERROR:",
-      error
-    );
-
-    return res.status(500).json({
-
-      success: false,
-
-      message: "Server Error ❌",
-    });
-  }
-};
-
-
-// =====================================
-// ✅ MARK AS READ
-// =====================================
-export const markAsRead = async (
-  req,
-  res
-) => {
-
-  try {
-
-    const notification =
-      await Notification.findById(
-        req.params.id
-      );
-
-    if (!notification) {
-
-      return res.status(404).json({
-
+      res.status(500).json({
         success: false,
-
-        message:
-          "Notification not found ❌",
+        message: error.message,
       });
     }
+};
 
-    notification.read = true;
+export const markAsRead = async (req, res) => {
+  try {
+    const notification =
+      await Notification.findByIdAndUpdate(
+        req.params.id,
+        { read: true },
+        { new: true }
+      );
 
-    await notification.save();
-
-    return res.status(200).json({
-
+    res.json({
       success: true,
-
-      message:
-        "Notification marked as read ✅",
+      notification,
     });
-
   } catch (error) {
-
-    console.error(
-      "MARK READ ERROR:",
-      error
-    );
-
-    return res.status(500).json({
-
+    res.status(500).json({
       success: false,
-
-      message: "Server Error ❌",
+      message: error.message,
     });
   }
 };

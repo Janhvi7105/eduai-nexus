@@ -11,6 +11,9 @@ from "../components/admin/AdminLayout";
 
 function ManageStudents() {
 
+  const darkMode =
+    localStorage.getItem("adminDarkMode") === "true";
+
   const [students, setStudents] =
     useState([]);
 
@@ -111,7 +114,14 @@ function ManageStudents() {
       <div style={styles.page}>
 
 
-        <h1 style={styles.heading}>
+        <h1
+          style={{
+            ...styles.heading,
+            color: darkMode
+              ? "#ffffff"
+              : "#111827",
+          }}
+        >
           👨‍🎓 Manage Students
         </h1>
 
@@ -126,7 +136,15 @@ function ManageStudents() {
               e.target.value
             )
           }
-          style={styles.search}
+          style={{
+            ...styles.search,
+            background: darkMode
+              ? "#1e293b"
+              : "#ffffff",
+            color: darkMode
+              ? "#ffffff"
+              : "#111827",
+          }}
         />
 
 
@@ -137,7 +155,15 @@ function ManageStudents() {
 
             <div
               key={student._id}
-              style={styles.studentCard}
+              style={{
+                ...styles.studentCard,
+                background: darkMode
+                  ? "#0f172a"
+                  : "#ffffff",
+                color: darkMode
+                  ? "#ffffff"
+                  : "#111827",
+              }}
             >
 
               <div style={styles.avatar}>
@@ -211,7 +237,6 @@ export default ManageStudents;
 const styles = {
 
   page: {
-    color: "white",
   },
 
   heading: {
@@ -232,10 +257,6 @@ const styles = {
     marginBottom: "25px",
 
     fontSize: "16px",
-
-    background: "#1e293b",
-
-    color: "white",
   },
 
   studentGrid: {
@@ -250,16 +271,12 @@ const styles = {
 
   studentCard: {
 
-    background: "#0f172a",
-
     padding: "25px",
 
     borderRadius: "20px",
 
     boxShadow:
       "0 10px 25px rgba(0,0,0,0.2)",
-
-    color: "white",
 
     transition: "0.3s",
   },

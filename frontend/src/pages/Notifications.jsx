@@ -12,7 +12,48 @@ function Notifications() {
 
 
   // =================================
-  // FETCH NOTIFICATIONS
+  // MARK NOTIFICATION AS READ
+  // =================================
+  const markRead = async (id) => {
+
+    try {
+
+      const token =
+        localStorage.getItem("token");
+
+      await axios.put(
+        `/api/notifications/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Refresh notifications after marking as read
+      const res = await axios.get(
+        "/api/notifications",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setNotifications(
+        res.data.notifications || []
+      );
+
+    } catch (err) {
+
+      console.error(err);
+    }
+  };
+
+
+  // =================================
+  // FETCH NOTIFICATIONS WITH AUTO-REFRESH
   // =================================
   useEffect(() => {
 
@@ -43,6 +84,13 @@ function Notifications() {
     };
 
     fetchNotifications();
+
+    const interval = setInterval(
+      fetchNotifications,
+      5000
+    );
+
+    return () => clearInterval(interval);
 
   }, []);
 
@@ -81,12 +129,36 @@ function Notifications() {
                   theme === "dark"
                     ? "#f8fafc"
                     : "#111827",
+
+                opacity: n.read ? 0.6 : 1,
               }}
             >
 
-              <h3>
-                {n.title}
-              </h3>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <h3>{n.title}</h3>
+
+                <span
+                  style={{
+                    background:
+                      n.type === "completion"
+                        ? "#10b981"
+                        : "#2563eb",
+                    color: "#fff",
+                    padding: "4px 10px",
+                    borderRadius: "20px",
+                    fontSize: "12px",
+                  }}
+                >
+                  {n.type}
+                </span>
+              </div>
 
               <p>
                 {n.message}
@@ -97,6 +169,24 @@ function Notifications() {
                   n.createdAt
                 ).toLocaleString()}
               </small>
+
+              {!n.read && (
+                <button
+                  onClick={() => markRead(n._id)}
+                  style={{
+                    marginTop: "12px",
+                    padding: "6px 12px",
+                    background: "#4f46e5",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    fontSize: "12px",
+                  }}
+                >
+                  Mark Read
+                </button>
+              )}
 
             </div>
           ))

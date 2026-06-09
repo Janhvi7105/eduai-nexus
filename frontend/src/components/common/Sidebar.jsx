@@ -44,11 +44,7 @@ function Sidebar({ theme }) {
       path: "/notes",
       icon: "🗒️",
     },
-    {
-      name: "Inbox",
-      path: "/inbox",
-      icon: "📩",
-    },
+  
   ];
 
   // ================= TEACHER MENU =================
@@ -138,24 +134,6 @@ function Sidebar({ theme }) {
 
       {/* ================= BOTTOM ================= */}
       <div style={styles.bottom}>
-        {/* REFER BOX */}
-        <div
-          style={{
-            ...styles.referBox,
-            background: theme === "dark" ? "#1e293b" : "#f9fafb",
-          }}
-        >
-          <p
-            style={{
-              ...styles.referTitle,
-              color: theme === "dark" ? "#f8fafc" : "#111827",
-            }}
-          >
-            🎁 Refer & Earn
-          </p>
-          <button style={styles.referBtn}>Refer Now</button>
-        </div>
-
         {/* LOGOUT */}
         <button onClick={handleLogout} style={styles.logout}>
           🚪 Logout
@@ -209,28 +187,6 @@ const styles = {
   },
   bottom: {
     padding: "20px",
-  },
-  referBox: {
-    padding: "18px",
-    borderRadius: "18px",
-    marginBottom: "18px",
-    textAlign: "center",
-  },
-  referTitle: {
-    fontWeight: "700",
-    marginBottom: "15px",
-    fontSize: "16px",
-  },
-  referBtn: {
-    width: "100%",
-    padding: "12px",
-    background: "linear-gradient(135deg,#f59e0b,#f97316)",
-    color: "#fff",
-    border: "none",
-    borderRadius: "12px",
-    cursor: "pointer",
-    fontWeight: "700",
-    fontSize: "15px",
   },
   logout: {
     width: "100%",

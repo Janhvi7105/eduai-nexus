@@ -46,30 +46,32 @@ function Topbar({
       <div style={styles.right}>
 
 
-        {/* 🔔 NOTIFICATION */}
-        <div
-          style={{
-            ...styles.iconBox,
+        {/* 🔔 NOTIFICATION - TEACHER ONLY */}
+        {user?.role === "teacher" && (
+          <div
+            style={{
+              ...styles.iconBox,
 
-            background:
-              theme === "dark"
-                ? "#111827"
-                : "#f3f4f6",
+              background:
+                theme === "dark"
+                  ? "#111827"
+                  : "#f3f4f6",
 
-            color:
-              theme === "dark"
-                ? "#ffffff"
-                : "#111827",
-          }}
+              color:
+                theme === "dark"
+                  ? "#ffffff"
+                  : "#111827",
+            }}
 
-          onClick={() =>
-            navigate("/notifications")
-          }
-        >
-          🔔
+            onClick={() =>
+              navigate("/notifications")
+            }
+          >
+            🔔
 
-          <span style={styles.dot}></span>
-        </div>
+            <span style={styles.dot}></span>
+          </div>
+        )}
 
 
         {/* 🌙 DARK MODE */}

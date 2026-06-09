@@ -1,26 +1,33 @@
+import { useState } from "react";
 import AdminSidebar from "./AdminSidebar";
+import AdminTopbar from "./AdminTopbar";
 
-function AdminLayout({ children, darkMode }) {
+function AdminLayout({ children }) {
+
+  const [darkMode, setDarkMode] =
+    useState(true);
+
   return (
     <div
       style={{
         ...styles.container,
-        background: darkMode ? "#020617" : "#f3f4f6",
+        background: darkMode
+          ? "#020617"
+          : "#f3f4f6",
       }}
     >
-      {/* ================= SIDEBAR ================= */}
       <AdminSidebar darkMode={darkMode} />
 
-      {/* ================= MAIN CONTENT ================= */}
       <div style={styles.main}>
+        <AdminTopbar
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+        />
 
-        {/* ================= PAGE CONTENT ================= */}
         <div style={styles.content}>
           {children}
         </div>
-
       </div>
-
     </div>
   );
 }

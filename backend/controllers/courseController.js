@@ -1,5 +1,6 @@
 import Course from "../models/Course.js";
 import Notification from "../models/Notification.js";
+import User from "../models/User.js";
 
 
 // ==========================
@@ -871,4 +872,61 @@ export const getCourseContent = async (req, res) => {
 
   }
 
+};
+
+
+// ==========================
+// ✅ COMPLETE COURSE
+// ==========================
+export const completeCourse = async (req, res) => {
+
+  try {
+
+    const { courseId } = req.body;
+    const userId = req.user._id;
+
+    // Find the course
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+
+      return res.status(404).json({
+        success: false,
+        message: "Course not found ❌",
+      });
+    }
+
+    // Find the student
+    const student = await User.findById(userId);
+
+    if (!student) {
+
+      return res.status(404).json({
+        success: false,
+        message: "Student not found ❌",
+      });
+    }
+
+    // Create notification for teacher
+    await Notification.create({
+      title: "Course Completed",
+      message: `${student.name} completed ${course.title}`,
+      type: "completion",
+      userId: course.instructor,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Course completion notification sent to teacher 🎉",
+    });
+
+  } catch (error) {
+
+    console.error("COMPLETE COURSE ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to complete course ❌",
+    });
+  }
 };

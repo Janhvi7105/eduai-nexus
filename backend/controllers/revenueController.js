@@ -1,56 +1,36 @@
-import Transaction
-from "../models/Transaction.js";
+import Transaction from "../models/Transaction.js";
 
 
 // =======================================
 // TEACHER REVENUE
 // =======================================
-export const getTeacherRevenue =
-  async (req, res) => {
+export const getTeacherRevenue = async (req, res) => {
+  try {
 
-    try {
-
-      const transactions =
-        await Transaction.find({
-
-          teacherId:
-            req.user._id,
-        });
-
-      const totalRevenue =
-        transactions.reduce(
-
-          (acc, item) =>
-
-            acc +
-            item.teacherRevenue,
-
-          0
-        );
-
-      res.json({
-
-        success: true,
-
-        totalRevenue,
-
-        totalSales:
-          transactions.length,
-
-        transactions,
+    const transactions =
+      await Transaction.find({
+        teacherId: req.user._id,
       });
 
-    } catch (error) {
+    const revenue =
+      transactions.reduce(
+        (sum, t) => sum + t.teacherRevenue,
+        0
+      );
 
-      res.status(500).json({
+    res.status(200).json({
+      success: true,
+      revenue,
+    });
 
-        success: false,
+  } catch (error) {
 
-        message:
-          "Failed to fetch revenue",
-      });
-    }
-  };
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
 
 
 // =======================================

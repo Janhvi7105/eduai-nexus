@@ -13,6 +13,8 @@ import {
 
   getAllStudents,
 
+  getStudentStats,
+
 } from "../controllers/userController.js";
 
 
@@ -72,6 +74,14 @@ router.get(
   "/students",
   protect,
   getAllStudents
+);
+
+
+// ✅ GET STUDENT DASHBOARD STATS
+router.get(
+  "/student-stats",
+  protect,
+  getStudentStats
 );
 
 

@@ -6,9 +6,11 @@ function TeacherDashboard() {
 
   const [user, setUser] = useState(null);
 
-  const [students, setStudents] = useState([]);
-
-  const [courses, setCourses] = useState([]);
+  const [stats, setStats] = useState({
+    courses: 0,
+    students: 0,
+    revenue: 0,
+  });
 
 
   // ================= LOAD USER =================
@@ -52,9 +54,10 @@ function TeacherDashboard() {
           }
         );
 
-        setStudents(
-          res.data.students || []
-        );
+        setStats(prev => ({
+          ...prev,
+          students: res.data.students?.length || 0
+        }));
 
       } catch (err) {
 
@@ -81,9 +84,10 @@ function TeacherDashboard() {
           "/api/courses"
         );
 
-        setCourses(
-          res.data.courses || []
-        );
+        setStats(prev => ({
+          ...prev,
+          courses: res.data.courses?.length || 0
+        }));
 
       } catch (err) {
 
@@ -95,6 +99,45 @@ function TeacherDashboard() {
     };
 
     fetchCourses();
+
+  }, []);
+
+
+  // ================= FETCH REVENUE =================
+  useEffect(() => {
+
+    const fetchRevenue = async () => {
+
+      try {
+
+        const token =
+          localStorage.getItem("token");
+
+        const revenueRes =
+          await axios.get(
+            "/api/revenue/teacher",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+        setStats((prev) => ({
+          ...prev,
+          revenue: revenueRes.data.revenue,
+        }));
+
+      } catch (err) {
+
+        console.error(
+          "Revenue fetch error:",
+          err
+        );
+      }
+    };
+
+    fetchRevenue();
 
   }, []);
 
@@ -152,7 +195,7 @@ function TeacherDashboard() {
           <h3>📚 Courses</h3>
 
           <p style={styles.number}>
-            {courses.length}
+            {stats.courses}
           </p>
 
         </div>
@@ -164,7 +207,7 @@ function TeacherDashboard() {
           <h3>👨‍🎓 Students</h3>
 
           <p style={styles.number}>
-            {students.length}
+            {stats.students}
           </p>
 
         </div>
@@ -176,7 +219,7 @@ function TeacherDashboard() {
           <h3>💰 Earnings</h3>
 
           <p style={styles.number}>
-            ₹0
+            ₹{stats.revenue}
           </p>
 
         </div>

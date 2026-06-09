@@ -44,7 +44,6 @@ import ManageTeachers from "./pages/ManageTeachers";
 import ManageCourses from "./pages/ManageCourses";
 import PendingTeachers from "./pages/PendingTeachers";  // ✅ ADDED
 import AdminProfile from "./pages/AdminProfile";  // ✅ ADDED FOR ADMIN PROFILE
-import Revenue from "./pages/Revenue";
 
 // ================= 🔔 NOTIFICATIONS =================
 import Notifications from "./pages/Notifications";
@@ -202,15 +201,6 @@ function App() {
           element={
             <ProtectedRoute>
               <ManageCourses />
-            </ProtectedRoute>
-          }
-        />
-        
-        <Route
-          path="/revenue"
-          element={
-            <ProtectedRoute>
-              <Revenue />
             </ProtectedRoute>
           }
         />

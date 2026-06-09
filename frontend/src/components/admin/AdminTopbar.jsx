@@ -1,11 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function AdminTopbar({ darkMode, setDarkMode }) {
 
   const navigate = useNavigate();
 
   const [showNotifications, setShowNotifications] = useState(false);
+  
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+
+    const fetchNotifications =
+      async () => {
+
+        try {
+
+          const token =
+            localStorage.getItem("token");
+
+          const res =
+            await axios.get(
+              "/api/notifications/all",
+              {
+                headers: {
+                  Authorization:
+                    `Bearer ${token}`,
+                },
+              }
+            );
+
+          setNotifications(
+            res.data.notifications
+          );
+
+        } catch (error) {
+
+          console.log(error);
+        }
+      };
+
+    fetchNotifications();
+
+  }, []);
 
   const admin =
     JSON.parse(localStorage.getItem("user")) || {};
@@ -56,30 +94,32 @@ function AdminTopbar({ darkMode, setDarkMode }) {
           >
             <h4>Notifications</h4>
             <div
-  style={{
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-  }}
->
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
+              }}
+            >
 
-  <div>
-    👨‍🎓 Student enrolled in React Basics
-  </div>
+              {notifications.length > 0 ? (
 
-  <div>
-    📚 New course created
-  </div>
+                notifications.map((n) => (
 
-  <div>
-    💰 Payment ₹499 received
-  </div>
+                  <div key={n._id}>
+                    {n.message}
+                  </div>
 
-  <div>
-    👨‍🏫 New instructor request
-  </div>
+                ))
 
-</div>
+              ) : (
+
+                <div>
+                  No notifications
+                </div>
+
+              )}
+
+            </div>
           </div>
         )}
 
@@ -91,7 +131,16 @@ function AdminTopbar({ darkMode, setDarkMode }) {
               ? "#1e293b"
               : "#f3f4f6",
           }}
-          onClick={() => setDarkMode(!darkMode)}
+          onClick={() => {
+            const newMode = !darkMode;
+
+            setDarkMode(newMode);
+
+            localStorage.setItem(
+              "adminDarkMode",
+              newMode
+            );
+          }}
         >
           {darkMode ? "🌙" : "☀️"}
         </div>

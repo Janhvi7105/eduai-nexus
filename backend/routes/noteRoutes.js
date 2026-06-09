@@ -6,6 +6,7 @@ import {
   updateNote,
   deleteNote,
   getAllNotes,
+  getMyNotes,
 } from "../controllers/noteController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
@@ -31,6 +32,13 @@ router.get(
   "/",
   authMiddleware,
   getAllNotes
+);
+
+// ================= GET MY NOTES =================
+router.get(
+  "/my-notes",
+  authMiddleware,
+  getMyNotes
 );
 
 // ================= UPLOAD NOTE =================

@@ -258,7 +258,7 @@ export const verifyPayment =
 
         type: "enrollment",
 
-        userId: userId,
+        userId: course.instructor,
       });
 
       // ==========================

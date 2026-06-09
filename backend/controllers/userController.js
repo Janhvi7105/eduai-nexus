@@ -1,5 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
+import Course from "../models/Course.js";
+import Certificate from "../models/Certificate.js";
 
 
 // ===============================
@@ -435,6 +437,80 @@ export const getAllStudents = async (
       success: false,
 
       message: "Server error ❌",
+    });
+  }
+};
+
+
+// =======================================
+// 📊 STUDENT DASHBOARD STATS
+// =======================================
+export const getStudentStats = async (
+  req,
+  res
+) => {
+  try {
+
+    const userId = req.user._id;
+
+    // Enrolled Courses
+    const totalCourses =
+      await Course.countDocuments({
+        students: userId,
+      });
+
+    // Mock Tests Attempted
+    const totalMockTests = 0;
+
+    // Certificates Earned
+    const totalCertificates =
+      await Certificate.countDocuments({
+        studentId: userId,
+      });
+
+    // Progress %
+    let progress = 0;
+
+    const courses =
+      await Course.find({
+        students: userId,
+      });
+
+    if (courses.length > 0) {
+
+      let completed = 0;
+
+      courses.forEach((course) => {
+
+        if (
+          course.completedStudents?.includes(
+            userId
+          )
+        ) {
+          completed++;
+        }
+      });
+
+      progress = Math.round(
+        (completed / courses.length) * 100
+      );
+    }
+
+    res.status(200).json({
+      success: true,
+      totalCourses,
+      totalMockTests,
+      totalCertificates,
+      progress,
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
     });
   }
 };

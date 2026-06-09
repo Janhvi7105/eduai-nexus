@@ -1,70 +1,296 @@
-# Getting Started with Create React App
+# 🎓 EduAI Nexus
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An AI-powered E-Learning Platform built using the MERN Stack (MongoDB, Express.js, React.js, Node.js) that connects students, instructors, and administrators on a single intelligent learning platform.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🚀 Overview
 
-### `npm start`
+EduAI Nexus is a modern online learning platform designed to provide seamless course management, student learning, instructor tools, AI-powered assistance, online payments, certifications, and analytics.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The platform supports three major roles:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* 👨‍🎓 Students
+* 👩‍🏫 Instructors
+* 👨‍💼 Administrators
 
-### `npm test`
+Students can enroll in courses, access notes, attempt mock tests, chat with an AI study assistant, track progress, and earn certificates.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Instructors can create and manage courses, upload study materials, manage notes, and monitor student engagement.
 
-### `npm run build`
+Administrators have complete control over users, courses, revenue, and platform activities.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# ✨ Key Features
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 👨‍🎓 Student Features
 
-### `npm run eject`
+* User Registration & Login
+* JWT Authentication
+* Browse Available Courses
+* Course Enrollment
+* Online Payment Integration (Razorpay)
+* Course Learning Dashboard
+* Progress Tracking
+* Download Course Notes
+* Mock Tests & Assessments
+* AI Study Assistant (Gemini AI)
+* Certificate Generation
+* Notifications System
+* Personalized Learning Experience
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 👩‍🏫 Instructor Features
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* Instructor Registration
+* Course Creation & Management
+* Upload Course Materials
+* Upload PDF Notes
+* Edit Notes
+* Delete Notes
+* Manage Course Content
+* View Student Enrollments
+* Course Analytics
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## 👨‍💼 Admin Features
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* Admin Dashboard
+* User Management
+* Student Management
+* Instructor Management
+* Course Approval & Management
+* Revenue Dashboard
+* Platform Monitoring
+* Analytics & Reports
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+# 🤖 AI Study Assistant
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+EduAI Nexus includes a built-in AI chatbot powered by Google Gemini.
 
-### Analyzing the Bundle Size
+Students can:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+* Ask study-related questions
+* Get learning guidance
+* Receive educational explanations
+* Improve understanding of concepts
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# 💳 Payment Gateway
 
-### Advanced Configuration
+Integrated with Razorpay for secure payments.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Features
 
-### Deployment
+* Course Purchase
+* Payment Verification
+* Enrollment after Successful Payment
+* Revenue Tracking
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+# 📚 Notes Management System
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Instructor
+
+* Upload Notes
+* Edit Notes
+* Delete Notes
+
+### Student
+
+* View Notes
+* Download Notes
+
+All updates made by instructors are reflected in the student portal.
+
+---
+
+# 🏆 Certificate Generation
+
+Students automatically receive certificates upon successful course completion.
+
+Certificate includes:
+
+* Student Name
+* Course Name
+* Completion Date
+* Digital Signature
+
+---
+
+# 📊 Revenue Analytics
+
+Admin dashboard includes:
+
+* Total Revenue
+* Course Sales
+* Enrollment Statistics
+* Platform Performance Metrics
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+
+* React.js
+* React Router
+* Axios
+* CSS
+* Responsive UI
+
+## Backend
+
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* JWT Authentication
+
+## AI
+
+* Google Gemini API
+
+## Payment
+
+* Razorpay
+
+## Cloud & Storage
+
+* Cloudinary
+* Multer
+
+---
+
+# 📁 Project Structure
+
+```bash
+EduAI-Nexus/
+│
+├── backend/
+│   ├── controllers/
+│   ├── routes/
+│   ├── models/
+│   ├── middleware/
+│   ├── config/
+│   └── server.js
+│
+├── frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   ├── components/
+│   │   ├── assets/
+│   │   └── App.js
+│
+└── package.json
+```
+
+# ⚙️ Installation
+
+### Clone Repository
+
+```bash
+git clone https://github.com/Janhvi7105/eduai-nexus.git
+```
+
+### Install Dependencies
+
+```bash
+npm install
+
+cd backend
+npm install
+
+cd ../frontend
+npm install
+```
+
+### Configure Environment Variables
+
+Create a `.env` file inside backend folder.
+
+```env
+PORT=5000
+
+MONGO_URI=your_mongodb_uri
+
+JWT_SECRET=your_secret
+
+RAZORPAY_KEY_ID=your_key
+
+RAZORPAY_KEY_SECRET=your_secret
+
+GEMINI_API_KEY=your_gemini_key
+
+EMAIL_USER=your_email
+
+EMAIL_PASS=your_password
+```
+
+### Run Project
+
+```bash
+npm run dev
+```
+
+Frontend:
+
+```bash
+http://localhost:3000
+```
+
+Backend:
+
+```bash
+http://localhost:5000
+```
+
+---
+
+# 📸 Screenshots
+
+Add screenshots of:
+
+* Login Page
+* Student Dashboard
+* Instructor Dashboard
+* Admin Dashboard
+* Notes Management
+* AI Chatbot
+* Certificate Page
+* Revenue Dashboard
+
+---
+
+# 🌟 Future Enhancements
+
+* Live Video Classes
+* AI Course Recommendations
+* Discussion Forums
+* Attendance Tracking
+* Mobile Application
+* Real-time Notifications
+* Advanced Analytics
+
+---
+
+# 👩‍💻 Developer
+
+**Janhvi Anil Ghuikar**
+
+Full Stack Developer | MERN Stack Enthusiast
+
+GitHub: https://github.com/Janhvi7105
+
+---
+
+## ⭐ Support
+
+If you like this project, don't forget to star the repository and share your feedback.

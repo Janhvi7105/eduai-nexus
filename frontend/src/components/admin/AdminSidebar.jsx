@@ -35,11 +35,7 @@ function AdminSidebar({ darkMode }) {
       icon: "📚",
       path: "/manage-courses",
     },
-{
-  title: "Revenue",
-  icon: "💰",
-  path: "/revenue",
-},
+
   ];
 
   // ================= LOGOUT =================

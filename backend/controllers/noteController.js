@@ -1,5 +1,48 @@
+import User from "../models/User.js";
 import Note from "../models/Note.js";
 import Course from "../models/Course.js";
+
+export const getMyNotes = async (req, res) => {
+  try {
+
+    const studentId = req.user._id;
+
+    const courses = await Course.find({
+      students: studentId,
+    });
+
+    const courseIds =
+      courses.map(
+        (course) => course._id
+      );
+
+    const notes =
+      await Note.find({
+        courseId: {
+          $in: courseIds,
+        },
+      }).sort({
+        createdAt: -1,
+      });
+
+    res.json({
+      success: true,
+      notes,
+    });
+
+  } catch (error) {
+
+    console.error(
+      "GET MY NOTES ERROR:",
+      error
+    );
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 // ==========================================
 // 📖 Upload Note

@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
 import { createTransporter } from "../config/email.js";
+import Notification from "../models/Notification.js";
 
 // 🔐 TEMP OTP STORE
 let otpStore = {};
@@ -206,6 +207,13 @@ export const registerTeacher = async (req, res) => {
       phone,
       role: "teacher",
       isApproved: false,
+    });
+
+    // 🔔 CREATE NOTIFICATION FOR ADMIN
+    await Notification.create({
+      title: "Instructor Request",
+      message: `${teacher.name} requested instructor access`,
+      type: "teacher",
     });
 
     // ✅ STEP 1: Generate token for the teacher

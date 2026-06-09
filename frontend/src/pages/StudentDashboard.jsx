@@ -17,8 +17,6 @@ import {
   Trophy,
   Clock,
   PlayCircle,
-  GraduationCap,
-  Bell,
 } from "lucide-react";
 
 import Chatbot from "../components/student/Chatbot";
@@ -26,11 +24,15 @@ import Chatbot from "../components/student/Chatbot";
 
 function StudentDashboard() {
 
-  const [courses, setCourses] =
-    useState([]);
-
   const [loading, setLoading] =
     useState(true);
+
+  const [stats, setStats] = useState({
+    totalCourses: 0,
+    totalMockTests: 0,
+    progress: 0,
+    totalCertificates: 0,
+  });
 
   const navigate =
     useNavigate();
@@ -41,90 +43,39 @@ function StudentDashboard() {
     );
 
 
-  // ================= FETCH COURSES =================
+  // ================= FETCH STATS =================
   useEffect(() => {
 
-    const fetchCourses =
-      async () => {
+    const fetchStats = async () => {
 
-        try {
+      try {
 
-          const token =
-            localStorage.getItem(
-              "token"
-            );
+        const token =
+          localStorage.getItem("token");
 
-          const user =
-            JSON.parse(
-              localStorage.getItem("user")
-            );
-
-          const email = user?.email;
-
-          // Debugging
-          console.log("TOKEN =", token);
-          console.log("EMAIL =", email);
-
-          if (
-            !email ||
-            !token
-          ) {
-
-            navigate(
-              "/login",
-              {
-                replace: true,
-              }
-            );
-
-            return;
-          }
-
-          const res =
-            await axios.get(
-
-              `/api/enroll/my-courses?email=${email}`,
-
-              {
-                headers: {
-                  Authorization:
-                    `Bearer ${token}`,
-                },
-              }
-            );
-
-          setCourses(
-            res.data.courses || []
+        const res =
+          await axios.get(
+            "/api/user/student-stats",
+            {
+              headers: {
+                Authorization:
+                  `Bearer ${token}`,
+              },
+            }
           );
 
-        } catch (err) {
+        setStats(res.data);
+        setLoading(false);
 
-          console.error(err);
+      } catch (err) {
+        console.log(err);
+        setLoading(false);
+      }
+    };
 
-          if (
-            err.response?.status ===
-            401
-          ) {
+    fetchStats();
 
-            localStorage.clear();
-
-            navigate(
-              "/login",
-              {
-                replace: true,
-              }
-            );
-          }
-
-        } finally {
-
-          setLoading(false);
-        }
-      };
-
-    fetchCourses();
-
-  }, [navigate]);
+  }, []);
 
 
   // ================= UI =================
@@ -151,11 +102,6 @@ function StudentDashboard() {
               Continue your learning journey
             </p>
 
-          </div>
-
-
-          <div style={styles.notification}>
-            <Bell size={24} />
           </div>
 
         </div>
@@ -218,7 +164,7 @@ function StudentDashboard() {
                 </h3>
 
                 <p style={styles.cardValue}>
-                  {courses.length}
+                  {stats.totalCourses}
                 </p>
 
               </div>
@@ -234,9 +180,7 @@ function StudentDashboard() {
                 </h3>
 
                 <p style={styles.cardValue}>
-                  {courses.length > 0
-                    ? 5
-                    : 0}
+                  {stats.totalMockTests}
                 </p>
 
               </div>
@@ -252,9 +196,7 @@ function StudentDashboard() {
                 </h3>
 
                 <p style={styles.cardValue}>
-                  {courses.length > 0
-                    ? "68%"
-                    : "0%"}
+                  {stats.progress}%
                 </p>
 
               </div>
@@ -270,205 +212,8 @@ function StudentDashboard() {
                 </h3>
 
                 <p style={styles.cardValue}>
-                  {courses.length > 0
-                    ? 2
-                    : 0}
+                  {stats.totalCertificates}
                 </p>
-
-              </div>
-
-            </div>
-
-
-            {/* ================= CONTINUE LEARNING ================= */}
-            <div style={styles.section}>
-
-
-              <h2 style={styles.sectionTitle}>
-                📚 Continue Learning
-              </h2>
-
-
-              {courses.length === 0 ? (
-
-                <div style={styles.emptyBox}>
-                  No courses enrolled ❗
-                </div>
-
-              ) : (
-
-                courses.map(
-                  (
-                    item,
-                    index
-                  ) => (
-
-                    <div
-                      key={index}
-                      style={styles.courseCard}
-                    >
-
-                      <div>
-
-                        <h3 style={styles.courseTitle}>
-                          {
-                            item.courseId
-                              ?.title
-                          }
-                        </h3>
-
-                        <p style={styles.courseDesc}>
-                          Continue from where
-                          you left off
-                        </p>
-
-                      </div>
-
-
-                      <button
-
-                        style={
-                          styles.continueBtn
-                        }
-
-                        onClick={() =>
-                          navigate(
-                            `/course/${item.courseId?._id}`
-                          )
-                        }
-                      >
-                        Continue
-                      </button>
-
-                    </div>
-                  )
-                )
-              )}
-
-            </div>
-
-
-            {/* ================= RECENT ACTIVITY ================= */}
-            <div style={styles.section}>
-
-
-              <h2 style={styles.sectionTitle}>
-                🔥 Recent Activity
-              </h2>
-
-
-              <div style={styles.activityBox}>
-                ✅ Completed Binary Search Lecture
-              </div>
-
-              <div style={styles.activityBox}>
-                📝 Attempted Mock Test
-              </div>
-
-              <div style={styles.activityBox}>
-                📜 Certificate unlocked
-              </div>
-
-            </div>
-
-
-            {/* ================= RECOMMENDED ================= */}
-            <div style={styles.section}>
-
-
-              <h2 style={styles.sectionTitle}>
-                🎯 Recommended Courses
-              </h2>
-
-
-              <div style={styles.recommendGrid}>
-
-
-                <div
-                  style={
-                    styles.recommendCard
-                  }
-                >
-
-                  <GraduationCap
-                    size={36}
-                  />
-
-                  <h3
-                    style={
-                      styles.recommendTitle
-                    }
-                  >
-                    React Masterclass
-                  </h3>
-
-                  <p
-                    style={
-                      styles.recommendText
-                    }
-                  >
-                    Build modern frontend apps
-                  </p>
-
-                </div>
-
-
-                <div
-                  style={
-                    styles.recommendCard
-                  }
-                >
-
-                  <GraduationCap
-                    size={36}
-                  />
-
-                  <h3
-                    style={
-                      styles.recommendTitle
-                    }
-                  >
-                    Node.js Backend
-                  </h3>
-
-                  <p
-                    style={
-                      styles.recommendText
-                    }
-                  >
-                    APIs and server systems
-                  </p>
-
-                </div>
-
-
-                <div
-                  style={
-                    styles.recommendCard
-                  }
-                >
-
-                  <GraduationCap
-                    size={36}
-                  />
-
-                  <h3
-                    style={
-                      styles.recommendTitle
-                    }
-                  >
-                    MongoDB Complete Guide
-                  </h3>
-
-                  <p
-                    style={
-                      styles.recommendText
-                    }
-                  >
-                    Learn NoSQL databases
-                  </p>
-
-                </div>
 
               </div>
 
@@ -514,12 +259,6 @@ const styles = {
     color: "#94a3b8",
     marginTop: "10px",
     fontSize: "18px",
-  },
-
-  notification: {
-    background: "#111827",
-    padding: "15px",
-    borderRadius: "14px",
   },
 
   hero: {
@@ -587,93 +326,6 @@ const styles = {
     marginTop: "12px",
     fontSize: "34px",
     fontWeight: "800",
-  },
-
-  section: {
-    marginBottom: "40px",
-  },
-
-  sectionTitle: {
-    fontSize: "32px",
-    fontWeight: "800",
-    marginBottom: "20px",
-  },
-
-  emptyBox: {
-    background: "#111827",
-    padding: "30px",
-    borderRadius: "20px",
-    color: "#94a3b8",
-  },
-
-  courseCard: {
-    background: "#111827",
-    padding: "28px",
-    borderRadius: "22px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "20px",
-  },
-
-  courseTitle: {
-    fontSize: "28px",
-    fontWeight: "700",
-  },
-
-  courseDesc: {
-    color: "#94a3b8",
-    marginTop: "10px",
-  },
-
-  continueBtn: {
-    background:
-      "linear-gradient(135deg,#2563eb,#7c3aed)",
-
-    color: "white",
-
-    border: "none",
-
-    padding: "16px 24px",
-
-    borderRadius: "14px",
-
-    cursor: "pointer",
-
-    fontWeight: "700",
-  },
-
-  activityBox: {
-    background: "#111827",
-    padding: "20px",
-    borderRadius: "16px",
-    marginBottom: "15px",
-    fontSize: "18px",
-  },
-
-  recommendGrid: {
-    display: "grid",
-    gridTemplateColumns:
-      "repeat(auto-fit,minmax(260px,1fr))",
-
-    gap: "20px",
-  },
-
-  recommendCard: {
-    background: "#111827",
-    padding: "30px",
-    borderRadius: "22px",
-  },
-
-  recommendTitle: {
-    marginTop: "18px",
-    fontSize: "24px",
-    fontWeight: "700",
-  },
-
-  recommendText: {
-    marginTop: "10px",
-    color: "#94a3b8",
   },
 
   loading: {

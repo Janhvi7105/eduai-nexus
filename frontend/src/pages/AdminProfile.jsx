@@ -1,6 +1,10 @@
 import { useState } from "react";
+import AdminLayout from "../components/admin/AdminLayout";
 
 function AdminProfile() {
+
+  const darkMode =
+    localStorage.getItem("adminDarkMode") === "true";
 
   const user =
     JSON.parse(localStorage.getItem("user")) || {};
@@ -35,60 +39,63 @@ function AdminProfile() {
   };
 
   return (
-    <div style={styles.page}>
 
-      <div style={styles.card}>
+    <AdminLayout darkMode={darkMode}>
 
-        {/* Avatar */}
-        <div style={styles.avatar}>
-          {name ? name[0].toUpperCase() : "A"}
+      <div style={styles.container}>
+        <div style={styles.card}>
+
+          {/* Avatar */}
+          <div style={styles.avatar}>
+            {name ? name[0].toUpperCase() : "A"}
+          </div>
+
+          <h1 style={styles.heading}>
+            Admin Profile
+          </h1>
+
+          {/* Name */}
+          <input
+            style={styles.input}
+            value={name}
+            onChange={(e) =>
+              setName(e.target.value)
+            }
+            placeholder="Full Name"
+          />
+
+          {/* Email */}
+          <input
+            style={styles.input}
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+            placeholder="Email"
+          />
+
+          {/* Password */}
+          <input
+            type="password"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+            placeholder="Password"
+            style={styles.input}
+          />
+
+          <button
+            style={styles.primaryBtn}
+            onClick={updateProfile}
+          >
+            Update Profile
+          </button>
+
         </div>
-
-        <h1 style={styles.heading}>
-          Admin Profile
-        </h1>
-
-        {/* Name */}
-        <input
-          style={styles.input}
-          value={name}
-          onChange={(e) =>
-            setName(e.target.value)
-          }
-          placeholder="Full Name"
-        />
-
-        {/* Email */}
-        <input
-          style={styles.input}
-          value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
-          placeholder="Email"
-        />
-
-        {/* Password */}
-        <input
-          type="password"
-          value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
-          placeholder="Password"
-          style={styles.input}
-        />
-
-        <button
-          style={styles.primaryBtn}
-          onClick={updateProfile}
-        >
-          Update Profile
-        </button>
-
       </div>
 
-    </div>
+    </AdminLayout>
   );
 }
 

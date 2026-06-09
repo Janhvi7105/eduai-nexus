@@ -11,15 +11,12 @@ function Notes() {
 
   const fetchNotes = async () => {
     try {
+
       const token =
         localStorage.getItem("token");
 
-      // Replace with actual course id for now
-      const courseId =
-        "6a23c14df4baee8e85221609";
-
       const res = await axios.get(
-        `/api/notes/course/${courseId}`,
+        "/api/notes/my-notes",
         {
           headers: {
             Authorization:
@@ -31,10 +28,8 @@ function Notes() {
       setNotes(res.data.notes);
 
     } catch (err) {
-      console.error(
-        "Fetch Notes Error:",
-        err
-      );
+
+      console.error(err);
     }
   };
 

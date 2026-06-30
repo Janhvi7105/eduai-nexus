@@ -1,78 +1,70 @@
 import dotenv from "dotenv";
 dotenv.config(); // ✅ MUST BE FIRST
 
-console.log("GEMINI =", process.env.GEMINI_API_KEY);
-
 import express from "express";
 import path from "path";
 import app from "./app.js";
 
-import connectDB
-from "./config/db.js";
-
+import connectDB from "./config/db.js";
 
 // ================= IMPORT ROUTES =================
 
 // 🔐 AUTH
-import authRoutes
-from "./routes/authRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 // 🎓 ENROLLMENT
-import enrollmentRoutes
-from "./routes/enrollmentRoutes.js";
+import enrollmentRoutes from "./routes/enrollmentRoutes.js";
 
 // 💳 PAYMENT
-import paymentRoutes
-from "./routes/paymentRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 
 // 💰 REVENUE
-import revenueRoutes
-from "./routes/revenueRoutes.js";
+import revenueRoutes from "./routes/revenueRoutes.js";
 
 // 📚 COURSES
-import courseRoutes
-from "./routes/courseRoutes.js";
+import courseRoutes from "./routes/courseRoutes.js";
 
 // 👤 USER
-import userRoutes
-from "./routes/userRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 // 📊 PROGRESS
-import progressRoutes
-from "./routes/progressRoutes.js";
+import progressRoutes from "./routes/progressRoutes.js";
 
 // 🔔 NOTIFICATIONS
-import notificationRoutes
-from "./routes/notificationRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 
 // 📜 CERTIFICATES
-import certificateRoutes
-from "./routes/certificateRoutes.js";
+import certificateRoutes from "./routes/certificateRoutes.js";
 
 // 📝 MOCK TEST
-import mockTestRoutes
-from "./routes/mockTestRoutes.js";
+import mockTestRoutes from "./routes/mockTestRoutes.js";
 
 // 👑 ADMIN USERS
-import adminRoutes
-from "./routes/adminRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 
 // 📚 ADMIN COURSES
-import courseAdminRoutes
-from "./routes/courseAdminRoutes.js";
+import courseAdminRoutes from "./routes/courseAdminRoutes.js";
 
 // 📖 NOTES
-import noteRoutes
-from "./routes/noteRoutes.js";
+import noteRoutes from "./routes/noteRoutes.js";
 
 // 🤖 CHATBOT - ADD THIS LINE
 import chatbotRoutes from "./routes/chatbotRoutes.js";
 
-
 // ================= DEBUG LOGS =================
+
 console.log(
-  "📧 EMAIL USER:",
-  process.env.EMAIL_USER || "Not Set ❌"
+  "🤖 Gemini API:",
+  process.env.GEMINI_API_KEY
+    ? "Loaded ✅"
+    : "Missing ❌"
+);
+
+console.log(
+  "📧 Email Config:",
+  process.env.EMAIL_USER
+    ? "Loaded ✅"
+    : "Missing ❌"
 );
 
 console.log(
@@ -88,7 +80,6 @@ console.log(
     ? "Loaded ✅"
     : "Missing ❌"
 );
-
 
 // ================= CONNECT DATABASE =================
 connectDB();
@@ -108,7 +99,6 @@ app.use(
   )
 );
 
-
 // ================= ROUTES =================
 
 // 🔐 AUTH
@@ -117,13 +107,11 @@ app.use(
   authRoutes
 );
 
-
 // 📚 COURSES
 app.use(
   "/api/courses",
   courseRoutes
 );
-
 
 // 💳 PAYMENT
 app.use(
@@ -131,13 +119,11 @@ app.use(
   paymentRoutes
 );
 
-
 // 💰 REVENUE
 app.use(
   "/api/revenue",
   revenueRoutes
 );
-
 
 // 🎓 ENROLLMENT
 app.use(
@@ -145,13 +131,11 @@ app.use(
   enrollmentRoutes
 );
 
-
 // 👤 USER
 app.use(
   "/api/user",
   userRoutes
 );
-
 
 // 📊 PROGRESS
 app.use(
@@ -159,13 +143,11 @@ app.use(
   progressRoutes
 );
 
-
 // 🔔 NOTIFICATIONS
 app.use(
   "/api/notifications",
   notificationRoutes
 );
-
 
 // 📜 CERTIFICATES
 app.use(
@@ -173,13 +155,11 @@ app.use(
   certificateRoutes
 );
 
-
 // 📝 MOCK TEST
 app.use(
   "/api/mocktest",
   mockTestRoutes
 );
-
 
 // 📖 NOTES
 app.use(
@@ -190,13 +170,11 @@ app.use(
 // 🤖 CHATBOT - ADD THIS LINE
 app.use("/api/chatbot", chatbotRoutes);
 
-
 // 👑 ADMIN USER MANAGEMENT
 app.use(
   "/api/admin",
   adminRoutes
 );
-
 
 // 📚 ADMIN COURSE MANAGEMENT
 app.use(
@@ -204,15 +182,12 @@ app.use(
   courseAdminRoutes
 );
 
-
 // ================= HEALTH CHECK =================
 app.get("/", (req, res) => {
-
   res.send(
     "🚀 EduAI Nexus Backend Running"
   );
 });
-
 
 // ================= GLOBAL ERROR HANDLER =================
 app.use(
@@ -222,30 +197,25 @@ app.use(
     res,
     next
   ) => {
-
     console.error(
       "❌ GLOBAL ERROR:",
       err.stack
     );
 
     res.status(500).json({
-
       success: false,
-
       message:
         err.message ||
-        "Something went wrong ❌",
+        "Something went wrong ❌"
     });
   }
 );
-
 
 // ================= SERVER =================
 const PORT =
   process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-
   console.log(
     `🚀 Server running on http://localhost:${PORT}`
   );

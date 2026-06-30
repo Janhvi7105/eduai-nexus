@@ -1,20 +1,17 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-console.log(
-  "CHATBOT GEMINI KEY =",
-  process.env.GEMINI_API_KEY
-);
-
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+// Safe startup check (does NOT expose the API key)
 console.log(
-  "Gemini Key:",
+  "🤖 Gemini API:",
   process.env.GEMINI_API_KEY
     ? "Loaded ✅"
     : "Missing ❌"
 );
 
+// Initialize Gemini
 const genAI = new GoogleGenerativeAI(
   process.env.GEMINI_API_KEY
 );
@@ -23,9 +20,20 @@ export const askChatbot = async (req, res) => {
   try {
     const { message } = req.body;
 
+    // Validate request
+    if (!message) {
+      return res.status(400).json({
+        success: false,
+        message: "Message is required.",
+      });
+    }
+
+    // Get Gemini model
     const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash",
-});
+      model: "gemini-2.5-flash",
+    });
+
+    // Generate response
     const result = await model.generateContent(message);
 
     res.status(200).json({
@@ -34,9 +42,7 @@ export const askChatbot = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("CHATBOT ERROR FULL:", error);
-    console.log("STATUS:", error.status);
-    console.log("MESSAGE:", error.message);
+    console.error("❌ CHATBOT ERROR:", error);
 
     res.status(500).json({
       success: false,

@@ -84,6 +84,12 @@ console.log(
 // ================= CONNECT DATABASE =================
 connectDB();
 
+// ================= LOGGING MIDDLEWARE =================
+app.use((req, res, next) => {
+  console.log("➡️", req.method, req.originalUrl);
+  next();
+});
+
 app.use(
   "/uploads",
   express.static(

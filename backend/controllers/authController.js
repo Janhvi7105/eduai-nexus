@@ -126,9 +126,14 @@ export const verifyOTP = async (req, res) => {
 // ==========================
 export const loginUser = async (req, res) => {
   try {
+    console.log("========== LOGIN START ==========");
+    console.log("Request Body:", req.body);
+
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
+
+    console.log("User Found:", user ? "YES" : "NO");
 
     if (!user) {
       return res.status(404).json({
@@ -137,7 +142,11 @@ export const loginUser = async (req, res) => {
       });
     }
 
+    console.log("Stored Role:", user.role);
+
     const isMatch = await bcrypt.compare(password, user.password);
+
+    console.log("Password Match:", isMatch);
 
     if (!isMatch) {
       return res.status(401).json({
@@ -146,9 +155,6 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    // =====================================
-    // 👨‍🏫 TEACHER APPROVAL CHECK
-    // =====================================
     if (user.role === "teacher" && !user.isApproved) {
       return res.status(403).json({
         success: false,
@@ -158,13 +164,17 @@ export const loginUser = async (req, res) => {
 
     const token = generateToken(user._id);
 
+    console.log("Login Success! ✅");
+
     res.json({
       success: true,
       token,
       user,
     });
+
   } catch (error) {
     console.error("LOGIN ERROR:", error);
+
     res.status(500).json({
       success: false,
       message: "Server error ❌",

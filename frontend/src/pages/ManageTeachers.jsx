@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 import AdminLayout from "../components/admin/AdminLayout";
 
 function ManageTeachers() {
@@ -20,7 +20,7 @@ function ManageTeachers() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/admin/teachers", {
+      const res = await API.get("/admin/teachers", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTeachers(res.data.teachers);
@@ -35,7 +35,7 @@ function ManageTeachers() {
     if (window.confirm("Are you sure you want to delete this teacher?")) {
       try {
         const token = localStorage.getItem("token");
-        await axios.delete(`http://localhost:5000/api/admin/user/${id}`, {
+        await API.delete(`/admin/user/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         fetchTeachers();

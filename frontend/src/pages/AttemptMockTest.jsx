@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import axios from "axios";
+import API from "../services/api";
 import { useParams } from "react-router-dom";
 import Layout from "../components/common/Layout";
 
@@ -19,7 +19,7 @@ function AttemptMockTest() {
     const fetchMockTest = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`http://localhost:5000/api/mocktest/${testId}`, {
+        const res = await API.get(`/mocktest/${testId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setTest(res.data.test);

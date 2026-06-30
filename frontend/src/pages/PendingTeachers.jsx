@@ -3,7 +3,7 @@ import {
   useState,
 } from "react";
 
-import axios from "axios";
+import API from "../services/api";
 
 import AdminLayout
 from "../components/admin/AdminLayout";
@@ -37,10 +37,8 @@ function PendingTeachers() {
           );
 
         const res =
-          await axios.get(
-
-            "http://localhost:5000/api/admin/pending-teachers",
-
+          await API.get(
+            "/admin/pending-teachers",
             {
               headers: {
                 Authorization:
@@ -71,12 +69,9 @@ function PendingTeachers() {
             "token"
           );
 
-        await axios.put(
-
-          `http://localhost:5000/api/admin/approve-teacher/${id}`,
-
+        await API.put(
+          `/admin/approve-teacher/${id}`,
           {},
-
           {
             headers: {
               Authorization:
@@ -105,10 +100,8 @@ function PendingTeachers() {
             "token"
           );
 
-        await axios.delete(
-
-          `http://localhost:5000/api/admin/user/${id}`,
-
+        await API.delete(
+          `/admin/user/${id}`,
           {
             headers: {
               Authorization:

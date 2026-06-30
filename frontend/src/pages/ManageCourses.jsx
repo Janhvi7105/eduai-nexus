@@ -3,7 +3,7 @@ import {
   useState,
 } from "react";
 
-import axios from "axios";
+import API from "../services/api";
 
 import AdminLayout
 from "../components/admin/AdminLayout";
@@ -43,10 +43,8 @@ function ManageCourses() {
           );
 
         const res =
-          await axios.get(
-
-            "http://localhost:5000/api/admin/courses",
-
+          await API.get(
+            "/admin/courses",
             {
               headers: {
                 Authorization:
@@ -77,10 +75,8 @@ function ManageCourses() {
             "token"
           );
 
-        await axios.delete(
-
-          `http://localhost:5000/api/admin/courses/${id}`,
-
+        await API.delete(
+          `/admin/courses/${id}`,
           {
             headers: {
               Authorization:

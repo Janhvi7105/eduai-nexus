@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 import Layout from "../components/common/Layout";
 import { 
   Download, 
@@ -29,7 +29,7 @@ function Notes() {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const res = await axios.get("/api/notes/my-notes", {
+      const res = await API.get("/notes/my-notes", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotes(res.data.notes);
@@ -49,7 +49,7 @@ function Notes() {
     try {
       const url = note.fileUrl.startsWith("http")
         ? note.fileUrl
-        : `http://localhost:5000${note.fileUrl}`;
+        : `${process.env.REACT_APP_API_URL.replace("/api", "")}${note.fileUrl}`;
       
       const response = await fetch(url);
       const blob = await response.blob();

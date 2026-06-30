@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../services/api";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function Login() {
@@ -77,7 +77,7 @@ function Login() {
     try {
       setLoading(true);
 
-      const res = await axios.post("/api/auth/login", form);
+      const res = await API.post("/auth/login", form);
 
       const { user, token } = res.data;
 

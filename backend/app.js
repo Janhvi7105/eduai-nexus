@@ -13,6 +13,11 @@ app.use(cors({
 }));
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.setHeader("X-CORS-TEST", "NEW-CORS-CONFIG");
+  next();
+});
+
 app.get("/", (req, res) => {
   res.send("EduAI Nexus API running 🚀");
 });

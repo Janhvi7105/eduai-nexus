@@ -28,7 +28,6 @@ API.interceptors.response.use(
     if (error.response?.status === 401) {
       console.warn("Unauthorized request. Please log in again.");
 
-      // Uncomment if you want automatic logout
       // localStorage.removeItem("token");
       // localStorage.removeItem("user");
       // window.location.href = "/login";

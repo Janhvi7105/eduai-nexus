@@ -1,6 +1,6 @@
 import AdminLayout from "../components/admin/AdminLayout";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../api";
 
 function AdminDashboard() {
   const [darkMode] = useState(true);
@@ -20,13 +20,9 @@ function AdminDashboard() {
     const fetchDashboardData = async () => {
       setIsLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        
         // Fetch stats - this is the most important one
         try {
-          const statsRes = await axios.get("/api/admin/stats", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const statsRes = await API.get("/admin/stats");
           
           console.log("Stats Response:", statsRes.data);
           
@@ -45,10 +41,12 @@ function AdminDashboard() {
 
         // Fetch recent activities - non-critical
         try {
-          const activitiesRes = await axios.get("/api/admin/recent-activities", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setRecentActivities(activitiesRes.data.activities || []);
+          const activitiesRes = await API.get("/admin/recent-activities");
+          setRecentActivities(
+            Array.isArray(activitiesRes.data.activities)
+              ? activitiesRes.data.activities
+              : []
+          );
         } catch (activitiesErr) {
           console.error("Failed to fetch activities:", activitiesErr);
           setRecentActivities([]);
@@ -56,10 +54,12 @@ function AdminDashboard() {
 
         // Fetch top courses - non-critical
         try {
-          const coursesRes = await axios.get("/api/admin/top-courses", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setTopCourses(coursesRes.data.courses || []);
+          const coursesRes = await API.get("/admin/top-courses");
+          setTopCourses(
+            Array.isArray(coursesRes.data.courses)
+              ? coursesRes.data.courses
+              : []
+          );
         } catch (coursesErr) {
           console.error("Failed to fetch courses:", coursesErr);
           setTopCourses([]);

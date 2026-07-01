@@ -22,23 +22,48 @@ function AdminDashboard() {
       try {
         const token = localStorage.getItem("token");
         
-        // Fetch stats
-        const statsRes = await axios.get("/api/admin/stats", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setStats(statsRes.data.stats);
+        // Fetch stats - this is the most important one
+        try {
+          const statsRes = await axios.get("/api/admin/stats", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          
+          console.log("Stats Response:", statsRes.data);
+          
+          setStats(
+            statsRes.data.stats || {
+              totalStudents: 0,
+              totalTeachers: 0,
+              totalCourses: 0,
+              totalRevenue: 0,
+            }
+          );
+        } catch (statsErr) {
+          console.error("Failed to fetch stats:", statsErr);
+          // Keep default stats (already set in useState)
+        }
 
-        // Fetch recent activities
-        const activitiesRes = await axios.get("/api/admin/recent-activities", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setRecentActivities(activitiesRes.data.activities || []);
+        // Fetch recent activities - non-critical
+        try {
+          const activitiesRes = await axios.get("/api/admin/recent-activities", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setRecentActivities(activitiesRes.data.activities || []);
+        } catch (activitiesErr) {
+          console.error("Failed to fetch activities:", activitiesErr);
+          setRecentActivities([]);
+        }
 
-        // Fetch top courses
-        const coursesRes = await axios.get("/api/admin/top-courses", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setTopCourses(coursesRes.data.courses || []);
+        // Fetch top courses - non-critical
+        try {
+          const coursesRes = await axios.get("/api/admin/top-courses", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setTopCourses(coursesRes.data.courses || []);
+        } catch (coursesErr) {
+          console.error("Failed to fetch courses:", coursesErr);
+          setTopCourses([]);
+        }
       } catch (err) {
         console.error("DASHBOARD ERROR:", err);
       } finally {
@@ -51,7 +76,7 @@ function AdminDashboard() {
   const analytics = [
     {
       title: "Total Students",
-      value: stats.totalStudents,
+      value: stats?.totalStudents ?? 0,
       icon: "👨‍🎓",
       iconBg: "#4f46e5",
       trend: "+12%",
@@ -60,7 +85,7 @@ function AdminDashboard() {
     },
     {
       title: "Total Teachers",
-      value: stats.totalTeachers,
+      value: stats?.totalTeachers ?? 0,
       icon: "👨‍🏫",
       iconBg: "#8b5cf6",
       trend: "+8%",
@@ -69,7 +94,7 @@ function AdminDashboard() {
     },
     {
       title: "Total Courses",
-      value: stats.totalCourses,
+      value: stats?.totalCourses ?? 0,
       icon: "📚",
       iconBg: "#10b981",
       trend: "+15%",

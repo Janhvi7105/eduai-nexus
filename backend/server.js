@@ -61,15 +61,15 @@ console.log(
 );
 
 console.log(
-  "📧 Email Config:",
-  process.env.EMAIL_USER
+  "📧 Brevo API:",
+  process.env.BREVO_API_KEY
     ? "Loaded ✅"
     : "Missing ❌"
 );
 
 console.log(
-  "🔐 EMAIL PASS:",
-  process.env.EMAIL_PASS
+  "📨 EMAIL_FROM:",
+  process.env.EMAIL_FROM
     ? "Loaded ✅"
     : "Missing ❌"
 );

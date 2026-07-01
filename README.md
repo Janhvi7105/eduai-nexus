@@ -1,4 +1,4 @@
-🎓 EduAI Nexus
+🎓 **EduAI Nexus**
 
 A modern MERN Stack based AI-Powered E-Learning Platform that enables students to learn online through interactive courses, secure payments, AI assistance, mock tests, certificates, notifications, study materials, and a powerful admin dashboard.
 

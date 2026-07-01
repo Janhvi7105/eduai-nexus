@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
-import { createTransporter } from "../config/email.js";
+import { sendEmail } from "../utils/sendBrevoEmail.js";
 import Notification from "../models/Notification.js";
 
 // 🔐 TEMP OTP STORE
@@ -30,18 +30,19 @@ export const sendOTP = async (req, res) => {
 
     console.log(`📩 OTP for ${email}: ${otp}`);
 
-    const transporter = createTransporter();
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Email Verification OTP",
-      html: `
-        <h2>Your OTP</h2>
-        <h1>${otp}</h1>
-        <p>Valid for 5 minutes</p>
-      `,
-    });
+    await sendEmail(
+      email,
+      "EduAI Nexus OTP Verification",
+      `
+        <div style="font-family:Arial,sans-serif">
+          <h2>EduAI Nexus</h2>
+          <p>Your OTP is:</p>
+          <h1 style="color:#4f46e5;">${otp}</h1>
+          <p>This OTP is valid for 5 minutes.</p>
+          <p>If you didn't request this OTP, please ignore this email.</p>
+        </div>
+      `
+    );
 
     res.json({
       success: true,

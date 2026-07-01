@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import API from "../services/api";
 import Layout from "../components/common/Layout";
 
 function TeacherProfile() {
@@ -31,10 +31,7 @@ function TeacherProfile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("/api/user/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await API.get("/user/profile");
         setProfile((prev) => ({
           ...prev,
           ...res.data.user,
@@ -70,10 +67,7 @@ function TeacherProfile() {
   const handleSave = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      await axios.put("/api/user/profile", profile, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await API.put("/user/profile", profile);
       alert("✅ Profile Updated Successfully");
       localStorage.setItem("user", JSON.stringify(profile));
     } catch (err) {

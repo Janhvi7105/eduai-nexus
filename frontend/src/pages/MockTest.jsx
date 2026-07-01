@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/common/Layout";
 import { 
@@ -122,22 +122,15 @@ function MockTest() {
     
     try {
       setSaving(true);
-      const token = localStorage.getItem("token");
       
-      await axios.post(
-        "/api/mocktest/create",
-        {
-          courseId,
-          title,
-          description,
-          duration,
-          passingScore,
-          questions,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await API.post("/mocktest/create", {
+        courseId,
+        title,
+        description,
+        duration,
+        passingScore,
+        questions,
+      });
       
       alert("✅ Mock Test Created Successfully!");
       navigate(`/course/${courseId}`);

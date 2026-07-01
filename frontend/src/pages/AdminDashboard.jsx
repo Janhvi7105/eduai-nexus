@@ -1,6 +1,6 @@
 import AdminLayout from "../components/admin/AdminLayout";
 import { useState, useEffect } from "react";
-import API from "../api";
+import API from "../services/api";
 
 function AdminDashboard() {
   const [darkMode] = useState(true);

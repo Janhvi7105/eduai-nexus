@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 function TeacherOnboarding() {
@@ -13,8 +13,6 @@ function TeacherOnboarding() {
     video: "",
     audience: "",
   });
-
-  const token = localStorage.getItem("token");
 
   // ================= SELECT =================
   const handleSelect = (field, value) => {
@@ -62,14 +60,9 @@ function TeacherOnboarding() {
 
       console.log("🚀 SENDING:", payload);
 
-      await axios.post(
-        "/api/user/onboarding",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      await API.post(
+        "/user/onboarding",
+        payload
       );
 
       console.log("✅ ONBOARDING COMPLETED");

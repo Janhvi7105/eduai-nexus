@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/common/Layout";
 import { 
@@ -59,17 +59,13 @@ function MyCourses() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const token = localStorage.getItem("token");
-        
-        if (!token) {
+        if (!localStorage.getItem("token")) {
           alert("Please login first ❗");
           navigate("/login", { replace: true });
           return;
         }
 
-        const res = await axios.get("/api/courses/my-courses", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await API.get("/courses/my-courses");
 
         setCourses(res.data.courses || []);
         

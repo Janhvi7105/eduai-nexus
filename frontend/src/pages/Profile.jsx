@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../services/api";
 import Layout from "../components/common/Layout";
 
 function Profile() {
@@ -27,13 +27,7 @@ function Profile() {
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
-
-        const res = await axios.get("/api/user/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await API.get("/user/profile");
 
         setUser(res.data.user);
 
@@ -60,16 +54,9 @@ function Profile() {
   const handleUpdateProfile = async () => {
     setUpdating(true);
     try {
-      const token = localStorage.getItem("token");
-
-      const res = await axios.put(
-        "/api/user/update-profile",
-        form,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const res = await API.put(
+        "/user/profile",
+        form
       );
 
       alert("Profile updated ✅");
@@ -98,18 +85,11 @@ function Profile() {
 
     setUpdating(true);
     try {
-      const token = localStorage.getItem("token");
-
-      await axios.put(
-        "/api/user/update-password",
+      await API.put(
+        "/user/password",
         {
           currentPassword: passwordData.currentPassword,
           newPassword: passwordData.newPassword,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         }
       );
 

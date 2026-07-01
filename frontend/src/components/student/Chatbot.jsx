@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import axios from "axios";
+import API from "../../services/api";
 
 function Chatbot() {
   const [messages, setMessages] = useState([
@@ -36,17 +36,9 @@ function Chatbot() {
     setIsLoading(true);
 
     try {
-      const token = localStorage.getItem("token");
-
-      const response = await axios.post(
-        "/api/chatbot/ask",
-        { message: input },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await API.post("/chatbot/ask", {
+        message: input,
+      });
 
       const botMessage = {
         id: Date.now() + 1,

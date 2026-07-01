@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../services/api";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
@@ -20,8 +20,6 @@ function Payment() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (!course) navigate("/courses");
@@ -64,14 +62,11 @@ function Payment() {
 
     try {
       // 1️⃣ CREATE ORDER
-      const { data } = await axios.post(
-        "/api/payment/create-order",
+      const { data } = await API.post(
+        "/payment/create-order",
         {
           amount: course.price,
           courseId: course._id,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
@@ -87,16 +82,13 @@ function Payment() {
 
         handler: async function (response) {
           try {
-            const res = await axios.post(
-              "/api/payment/verify-payment",
+            const res = await API.post(
+              "/payment/verify-payment",
               {
                 courseId: course._id,
                 password: password,
                 paymentId: response.razorpay_payment_id,
                 orderId: response.razorpay_order_id,
-              },
-              {
-                headers: { Authorization: `Bearer ${token}` },
               }
             );
 

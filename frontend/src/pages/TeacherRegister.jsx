@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 function TeacherRegister() {
@@ -52,7 +52,7 @@ function TeacherRegister() {
     try {
       setLoading(true);
 
-      const res = await axios.post("/api/auth/register-teacher", {
+      const res = await API.post("/auth/register-teacher", {
         name: form.name.trim(),
         email: form.email.trim(),
         password: form.password,

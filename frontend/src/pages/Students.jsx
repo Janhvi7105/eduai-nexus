@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 import Layout from "../components/common/Layout";
 import { 
   Users, 
@@ -25,16 +25,18 @@ function Students() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("/api/user/students", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setStudents(Array.isArray(res.data.students) ? res.data.students : []);
+        const res = await API.get("/user/students");
         
+        setStudents(
+          Array.isArray(res.data.students)
+            ? res.data.students
+            : []
+        );
+
         // Extract unique courses from all students
         const allCourses = new Set();
-        res.data.students?.forEach(student => {
-          student.enrolledCourses?.forEach(course => {
+        (res.data.students || []).forEach((student) => {
+          (student.enrolledCourses || []).forEach((course) => {
             allCourses.add(course.title);
           });
         });

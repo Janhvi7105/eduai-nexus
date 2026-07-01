@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/common/Layout";
 import { 
@@ -39,10 +39,7 @@ function StudentDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("/api/user/student-stats", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await API.get("/user/student-stats");
         setStats(res.data);
         setLoading(false);
       } catch (err) {

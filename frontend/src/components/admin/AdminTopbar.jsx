@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../../services/api";
 
 function AdminTopbar({ darkMode, setDarkMode, sidebarCollapsed, setSidebarCollapsed, isMobile }) {
   const navigate = useNavigate();
@@ -28,10 +28,7 @@ function AdminTopbar({ darkMode, setDarkMode, sidebarCollapsed, setSidebarCollap
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("/api/notifications/all", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await API.get("/notifications/all");
         setNotifications(res.data.notifications);
       } catch (error) {
         console.log(error);

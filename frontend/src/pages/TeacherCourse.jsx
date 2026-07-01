@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../components/common/Layout";
 import Swal from "sweetalert2";
@@ -43,19 +43,13 @@ function TeacherCourse() {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const token = localStorage.getItem("token");
-        
         // Fetch course
-        const courseRes = await axios.get(`/api/courses/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const courseRes = await API.get(`/courses/${id}`);
         setCourse(courseRes.data.course);
         
         // Fetch students
         try {
-          const studentRes = await axios.get(`/api/course/${id}/students`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const studentRes = await API.get(`/course/${id}/students`);
           setStudents(studentRes.data.students || []);
         } catch (err) {
           console.log("Student fetch skipped");
@@ -73,17 +67,12 @@ function TeacherCourse() {
   const handleSaveCourse = async () => {
     try {
       setSaving(true);
-      const token = localStorage.getItem("token");
       
-      await axios.put(
-        `/api/courses/${course._id}`,
-        {
-          title: course.title,
-          description: course.description,
-          price: course.price,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await API.put(`/courses/${course._id}`, {
+        title: course.title,
+        description: course.description,
+        price: course.price,
+      });
       
       await Swal.fire({
         icon: "success",

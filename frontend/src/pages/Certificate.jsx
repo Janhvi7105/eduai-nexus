@@ -3,7 +3,7 @@ import {
   useState,
 } from "react";
 
-import axios from "axios";
+import API from "../services/api";
 
 import jsPDF from "jspdf";
 
@@ -37,18 +37,9 @@ function Certificate() {
 
         try {
 
-          const token =
-            localStorage.getItem("token");
-
-          const res = await axios.post(
-            "/api/certificate/generate",
-            { courseId },
-            {
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
-              },
-            }
+          const res = await API.post(
+            "/certificate/generate",
+            { courseId }
           );
 
           setCertificate(

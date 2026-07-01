@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import API from "../services/api";
 import Swal from "sweetalert2";
 
 function EditCourse() {
@@ -29,7 +29,6 @@ function EditCourse() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [expandedSections, setExpandedSections] = useState({});
 
-  const token = localStorage.getItem("token");
   const theme = localStorage.getItem("theme") || "dark";
 
   // ================= HANDLE DONE =================
@@ -66,7 +65,7 @@ function EditCourse() {
   // ================= FETCH COURSE =================
   const fetchCourse = useCallback(async () => {
     try {
-      const res = await axios.get(`/api/courses/${id}`);
+      const res = await API.get(`/courses/${id}`);
       const courseData = res.data.course;
 
       if (!courseData.sections || courseData.sections.length === 0) {
@@ -102,11 +101,10 @@ function EditCourse() {
     }
 
     try {
-      await axios.post(
-        "/api/courses/add-section",
-        { courseId: id, title: sectionTitle },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await API.post("/courses/add-section", {
+        courseId: id,
+        title: sectionTitle,
+      });
 
       setSectionTitle("");
       fetchCourse();
@@ -132,9 +130,8 @@ function EditCourse() {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete("/api/courses/delete-section", {
+        await API.delete("/courses/delete-section", {
           data: { courseId: id, sectionIndex: index },
-          headers: { Authorization: `Bearer ${token}` },
         });
         fetchCourse();
         Swal.fire("Deleted!", "Module has been deleted.", "success");
@@ -148,11 +145,11 @@ function EditCourse() {
   // ================= UPDATE SECTION =================
   const handleUpdateSection = async () => {
     try {
-      await axios.put(
-        "/api/courses/edit-section",
-        { courseId: id, sectionIndex: editingSectionIndex, title: editSectionTitle },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await API.put("/courses/edit-section", {
+        courseId: id,
+        sectionIndex: editingSectionIndex,
+        title: editSectionTitle,
+      });
       setEditingSectionIndex(null);
       fetchCourse();
       Swal.fire("Success", "Module updated successfully", "success");
@@ -182,17 +179,13 @@ function EditCourse() {
     }
 
     try {
-      await axios.post(
-        "/api/courses/add-lecture",
-        {
-          courseId: id,
-          sectionIndex: selectedSectionIndex,
-          title: lecture.title.trim(),
-          videoUrl: convertToEmbed(cleanUrl),
-          duration: lecture.duration || "10:00",
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await API.post("/courses/add-lecture", {
+        courseId: id,
+        sectionIndex: selectedSectionIndex,
+        title: lecture.title.trim(),
+        videoUrl: convertToEmbed(cleanUrl),
+        duration: lecture.duration || "10:00",
+      });
 
       Swal.fire({
         icon: "success",
@@ -234,9 +227,8 @@ function EditCourse() {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete("/api/courses/delete-lecture", {
+        await API.delete("/courses/delete-lecture", {
           data: { courseId: id, sectionIndex: selectedSectionIndex, lectureIndex: i },
-          headers: { Authorization: `Bearer ${token}` },
         });
         fetchCourse();
         Swal.fire("Deleted!", "Lecture has been deleted.", "success");
@@ -250,18 +242,14 @@ function EditCourse() {
   // ================= UPDATE LECTURE =================
   const handleUpdateLecture = async () => {
     try {
-      await axios.put(
-        "/api/courses/edit-lecture",
-        {
-          courseId: id,
-          sectionIndex: selectedSectionIndex,
-          lectureIndex: editingLectureIndex,
-          title: editTitle,
-          videoUrl: editVideoUrl,
-          duration: editDuration,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await API.put("/courses/edit-lecture", {
+        courseId: id,
+        sectionIndex: selectedSectionIndex,
+        lectureIndex: editingLectureIndex,
+        title: editTitle,
+        videoUrl: editVideoUrl,
+        duration: editDuration,
+      });
 
       Swal.fire("Success", "Lecture updated successfully", "success");
       setEditingLecture(null);

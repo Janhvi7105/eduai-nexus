@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 import Layout from "../components/common/Layout";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -43,8 +43,8 @@ function CreateCourse() {
 
       setLoading(true);
 
-      const res = await axios.post(
-        "/api/courses/create",
+      const res = await API.post(
+        "/courses/create",
         {
           title: courseData.title,
           description: courseData.description,

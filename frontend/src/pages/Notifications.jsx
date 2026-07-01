@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 import Layout from "../components/common/Layout";
 
 function Notifications() {
@@ -18,28 +18,10 @@ function Notifications() {
 
     try {
 
-      const token =
-        localStorage.getItem("token");
-
-      await axios.put(
-        `/api/notifications/${id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await API.put(`/notifications/${id}`);
 
       // Refresh notifications after marking as read
-      const res = await axios.get(
-        "/api/notifications",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await API.get("/notifications");
 
       setNotifications(
         res.data.notifications || []
@@ -61,17 +43,7 @@ function Notifications() {
 
       try {
 
-        const token =
-          localStorage.getItem("token");
-
-        const res = await axios.get(
-          "/api/notifications",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await API.get("/notifications");
 
         setNotifications(
           res.data.notifications || []

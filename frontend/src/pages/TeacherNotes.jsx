@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Layout from "../components/common/Layout";
-import axios from "axios";
+import API from "../services/api";
 
 function TeacherNotes() {
   const [title, setTitle] = useState("");
@@ -14,10 +14,7 @@ function TeacherNotes() {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const token = localStorage.getItem("token");
-      const res = await axios.get("/api/courses/my-courses", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await API.get("/courses/my-courses");
       setCourses(res.data.courses);
     };
 
@@ -27,10 +24,7 @@ function TeacherNotes() {
 
   const fetchNotes = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get("/api/notes", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await API.get("/notes");
       setNotes(res.data.notes);
     } catch (error) {
       console.log(error);
@@ -45,15 +39,13 @@ function TeacherNotes() {
 
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
       const formData = new FormData();
       formData.append("title", title);
       formData.append("courseId", courseId);
       if (file) formData.append("file", file);
 
-      await axios.put(`/api/notes/${selectedNote}`, formData, {
+      await API.put(`/notes/${selectedNote}`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
@@ -82,10 +74,7 @@ function TeacherNotes() {
 
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`/api/notes/${selectedNote}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await API.delete(`/notes/${selectedNote}`);
       alert("Notes deleted successfully ✅");
       fetchNotes();
       setSelectedNote("");
@@ -109,15 +98,13 @@ function TeacherNotes() {
 
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
       const formData = new FormData();
       formData.append("title", title);
       formData.append("file", file);
       formData.append("courseId", courseId);
 
-      await axios.post("/api/notes/upload", formData, {
+      await API.post("/notes/upload", formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });

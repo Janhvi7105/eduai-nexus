@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 function Courses() {
@@ -25,7 +25,7 @@ function Courses() {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("/api/courses");
+        const res = await API.get("/courses");
         setCourses(res.data.courses);
       } catch (err) {
         console.error(err);
@@ -67,7 +67,7 @@ function Courses() {
     }
     try {
       setSendingOtp(true);
-      await axios.post("/api/auth/send-otp", { email });
+      await API.post("/auth/send-otp", { email });
       alert("✅ OTP sent successfully!");
       setShowOtpInput(true);
     } catch (err) {
@@ -90,7 +90,7 @@ function Courses() {
     }
     try {
       setVerifyingOtp(true);
-      const res = await axios.post("/api/auth/verify-otp", {
+      const res = await API.post("/auth/verify-otp", {
         name, email, phone, otp,
       });
       localStorage.setItem("token", res.data.token);

@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 
 function CoursePlayer() {
   const { id } = useParams();
@@ -13,16 +13,13 @@ function CoursePlayer() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [expandedSections, setExpandedSections] = useState({});
 
-  const token = localStorage.getItem("token");
   const theme = localStorage.getItem("theme") || "light";
 
   // ================= FETCH COURSE =================
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await axios.get(`/api/courses/course-content/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await API.get(`/courses/course-content/${id}`);
         setCourse(res.data.course);
         
         // Initialize expanded sections (all true)
@@ -48,7 +45,7 @@ function CoursePlayer() {
       }
     };
     fetchCourse();
-  }, [id, token, navigate]);
+  }, [id, navigate]);
 
   // ================= TOTAL LECTURES =================
   const totalLectures = course?.sections?.reduce(
@@ -73,11 +70,11 @@ function CoursePlayer() {
   // ================= SAVE PROGRESS =================
   const saveProgress = async (lectureIndex) => {
     try {
-      await axios.post("/api/progress/save-progress", {
+      await API.post("/progress/save-progress", {
         courseId: id,
         lectureIndex,
         watchedTime: 10,
-      }, { headers: { Authorization: `Bearer ${token}` } });
+      });
     } catch (err) {
       console.error("Progress save error:", err);
     }

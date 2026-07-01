@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../services/api";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/common/Layout";
 import { 
@@ -29,17 +29,17 @@ function StudentMockTests() {
     const fetchTests = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem("token");
-        const res = await axios.get("/api/mocktest/all", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setTests(res.data.tests);
+        const res = await API.get("/mocktest/all");
+        setTests(res.data.tests || []);
         
         // Calculate stats
-        const totalQuestions = res.data.tests.reduce((acc, test) => acc + (test.questions?.length || 0), 0);
+        const totalQuestions = (res.data.tests || []).reduce(
+          (acc, test) => acc + (test.questions?.length || 0),
+          0
+        );
         setStats({
-          totalTests: res.data.tests.length,
-          completedTests: res.data.tests.filter(t => t.completed).length,
+          totalTests: (res.data.tests || []).length,
+          completedTests: (res.data.tests || []).filter(t => t.completed).length,
           averageScore: 78,
           totalQuestions: totalQuestions
         });

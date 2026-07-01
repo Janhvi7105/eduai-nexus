@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../services/api";
 import Layout from "../components/common/Layout";
 import { 
   BookOpen, 
@@ -40,20 +40,15 @@ function TeacherDashboard() {
     const fetchAllStats = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem("token");
         
         // Fetch students
-        const studentsRes = await axios.get("/api/user/students", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const studentsRes = await API.get("/user/students");
         
         // Fetch courses
-        const coursesRes = await axios.get("/api/courses");
+        const coursesRes = await API.get("/courses");
         
         // Fetch revenue
-        const revenueRes = await axios.get("/api/revenue/teacher", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const revenueRes = await API.get("/revenue/teacher");
         
         setStats(prev => ({
           ...prev,

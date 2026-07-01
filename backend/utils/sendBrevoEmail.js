@@ -1,5 +1,9 @@
 import { BrevoClient } from "@getbrevo/brevo";
 
+// 👇 ADD THESE TWO LINES
+console.log("BREVO_API_KEY exists:", !!process.env.BREVO_API_KEY);
+console.log("EMAIL_FROM:", process.env.EMAIL_FROM);
+
 const brevo = new BrevoClient({
   apiKey: process.env.BREVO_API_KEY,
 });
@@ -18,15 +22,12 @@ export const sendEmail = async (toEmail, subject, htmlContent) => {
         name: "EduAI Nexus",
         email: process.env.EMAIL_FROM,
       },
-
       to: [
         {
           email: safeEmail,
         },
       ],
-
       subject,
-
       htmlContent,
     });
 

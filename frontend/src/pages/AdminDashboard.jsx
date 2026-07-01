@@ -26,7 +26,7 @@ function AdminDashboard() {
         const statsRes = await axios.get("/api/admin/stats", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setStats(statsRes.data);
+        setStats(statsRes.data.stats);
 
         // Fetch recent activities
         const activitiesRes = await axios.get("/api/admin/recent-activities", {
@@ -78,7 +78,7 @@ function AdminDashboard() {
     },
     {
       title: "Total Revenue",
-      value: `₹${stats.totalRevenue.toLocaleString()}`,
+      value: `₹${(stats?.totalRevenue ?? 0).toLocaleString()}`,
       icon: "💰",
       iconBg: "#f59e0b",
       trend: "+23%",

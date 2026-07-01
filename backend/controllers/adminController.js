@@ -384,10 +384,12 @@ export const getAdminStats = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      totalStudents,
-      totalTeachers,
-      totalCourses,
-      totalRevenue,
+      stats: {
+        totalStudents,
+        totalTeachers,
+        totalCourses,
+        totalRevenue,
+      },
     });
 
   } catch (error) {

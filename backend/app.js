@@ -7,7 +7,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://eduai-nexus-dcjaee707-janhvi7105-projects.vercel.app/",
+      "https://eduai-nexus-ashen.vercel.app",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],

@@ -2,7 +2,7 @@ import User from "../models/User.js";
 import Course from "../models/Course.js";
 import Transaction from "../models/Transaction.js";
 import Notification from "../models/Notification.js";
-import sendEmail from "../utils/sendEmail.js";
+import { sendEmail } from "../utils/sendBrevoEmail.js";
 
 // =======================================
 // GET ALL STUDENTS
@@ -221,14 +221,28 @@ export const approveTeacher =
       await sendEmail(
         teacher.email,
         "Instructor Application Approved",
-        `Congratulations ${teacher.name}!
-
-Your instructor application has been approved.
-
-You can now login and access the Teacher Dashboard.
-
-Regards,
-EduAI Nexus Team`
+        `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc; border-radius: 12px;">
+            <h2 style="color: #4f46e5; margin-bottom: 20px;">🎉 Congratulations ${teacher.name}!</h2>
+            
+            <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+              <p style="font-size: 16px; color: #1e293b; line-height: 1.6;">Your instructor application has been <strong style="color: #10b981;">approved</strong>.</p>
+              
+              <p style="font-size: 16px; color: #1e293b; line-height: 1.6;">You can now log in and access the <strong>Teacher Dashboard</strong> to start creating courses.</p>
+              
+              <div style="background: #f1f5f9; padding: 16px; border-radius: 8px; margin: 16px 0;">
+                <p style="font-size: 14px; color: #475569; margin: 0;">🔑 <strong>Login:</strong> Use your registered email and password</p>
+              </div>
+              
+              <p style="font-size: 14px; color: #64748b; margin-top: 20px;">Welcome to the team! 🚀</p>
+            </div>
+            
+            <p style="font-size: 12px; color: #94a3b8; margin-top: 20px; text-align: center;">
+              Regards,<br/>
+              <strong>EduAI Nexus Team</strong>
+            </p>
+          </div>
+        `
       );
 
       res.status(200).json({

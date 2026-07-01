@@ -23,7 +23,7 @@ function ManageTeachers() {
       const res = await API.get("/admin/teachers", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setTeachers(res.data.teachers);
+      setTeachers(Array.isArray(res.data.teachers) ? res.data.teachers : []);
     } catch (error) {
       console.log(error);
     } finally {
@@ -47,11 +47,11 @@ function ManageTeachers() {
   };
 
   // Extract unique subjects from teachers
-  const allSubjects = ["all", ...new Set(teachers.flatMap(t => 
+  const allSubjects = ["all", ...new Set((teachers || []).flatMap(t => 
     t.skills?.split(",").map(s => s.trim()) || []
   ))];
 
-  const filteredTeachers = teachers.filter((teacher) => {
+  const filteredTeachers = (teachers || []).filter((teacher) => {
     const matchesSearch = (teacher?.name || "")
       .toLowerCase()
       .includes(search.toLowerCase());
@@ -63,8 +63,10 @@ function ManageTeachers() {
   });
 
   const stats = {
-    total: teachers.length,
-    active: teachers.filter(t => t.status !== "inactive").length,
+    total: teachers?.length || 0,
+    active: (teachers || []).filter(
+      t => t.status !== "inactive"
+    ).length,
     subjects: allSubjects.length - 1,
   };
 

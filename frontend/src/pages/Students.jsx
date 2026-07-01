@@ -29,7 +29,7 @@ function Students() {
         const res = await axios.get("/api/user/students", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setStudents(res.data.students || []);
+        setStudents(Array.isArray(res.data.students) ? res.data.students : []);
         
         // Extract unique courses from all students
         const allCourses = new Set();
@@ -50,7 +50,7 @@ function Students() {
   }, []);
 
   // Filter students based on search and course filter
-  const filteredStudents = students.filter(student => {
+  const filteredStudents = (students || []).filter(student => {
     const matchesSearch = student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          student.email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCourse = filterCourse === "all" || 

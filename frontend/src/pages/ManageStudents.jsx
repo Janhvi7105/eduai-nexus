@@ -24,7 +24,7 @@ function ManageStudents() {
       const res = await API.get("/admin/students", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setStudents(res.data.students);
+      setStudents(Array.isArray(res.data.students) ? res.data.students : []);
     } catch (error) {
       console.log(error);
     } finally {
@@ -52,7 +52,7 @@ function ManageStudents() {
     setShowModal(true);
   };
 
-  const filteredStudents = students.filter((student) => {
+  const filteredStudents = (students || []).filter((student) => {
     const matchesSearch = (student?.name || "")
       .toLowerCase()
       .includes(search.toLowerCase());
@@ -65,9 +65,9 @@ function ManageStudents() {
   });
 
   const stats = {
-    total: students.length,
-    active: students.filter(s => s.status !== "inactive").length,
-    inactive: students.filter(s => s.status === "inactive").length,
+    total: students?.length || 0,
+    active: (students || []).filter(s => s.status !== "inactive").length,
+    inactive: (students || []).filter(s => s.status === "inactive").length,
   };
 
   return (

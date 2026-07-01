@@ -9,7 +9,6 @@ import {
   GraduationCap,
   Search,
   Filter,
-  ChevronRight,
   Calendar,
   TrendingUp
 } from "lucide-react";

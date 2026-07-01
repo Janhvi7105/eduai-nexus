@@ -1,6 +1,6 @@
 import AdminLayout from "../components/admin/AdminLayout";
 import { useState, useEffect } from "react";
-import API from "../api";
+import axios from "axios";
 
 function AdminDashboard() {
   const [darkMode] = useState(true);
@@ -20,9 +20,13 @@ function AdminDashboard() {
     const fetchDashboardData = async () => {
       setIsLoading(true);
       try {
+        const token = localStorage.getItem("token");
+        
         // Fetch stats - this is the most important one
         try {
-          const statsRes = await API.get("/admin/stats");
+          const statsRes = await axios.get("/api/admin/stats", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
           
           console.log("Stats Response:", statsRes.data);
           
@@ -41,7 +45,9 @@ function AdminDashboard() {
 
         // Fetch recent activities - non-critical
         try {
-          const activitiesRes = await API.get("/admin/recent-activities");
+          const activitiesRes = await axios.get("/api/admin/recent-activities", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
           setRecentActivities(
             Array.isArray(activitiesRes.data.activities)
               ? activitiesRes.data.activities
@@ -54,7 +60,9 @@ function AdminDashboard() {
 
         // Fetch top courses - non-critical
         try {
-          const coursesRes = await API.get("/admin/top-courses");
+          const coursesRes = await axios.get("/api/admin/top-courses", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
           setTopCourses(
             Array.isArray(coursesRes.data.courses)
               ? coursesRes.data.courses

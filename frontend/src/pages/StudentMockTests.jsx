@@ -10,7 +10,8 @@ import {
   ChevronRight,
   Target,
   Calendar,
-  BarChart3
+  BarChart3,
+  BookOpen
 } from "lucide-react";
 
 function StudentMockTests() {
@@ -90,16 +91,16 @@ function StudentMockTests() {
     <Layout>
       <div style={styles.page}>
         
-        {/* Hero Section */}
-        <div style={styles.heroSection}>
-          <div style={styles.heroContent}>
-            <div style={styles.heroBadge}>
-              <Target size={18} />
-              <span>Practice & Improve</span>
+        {/* Header Section */}
+        <div style={styles.headerSection}>
+          <div style={styles.headerContent}>
+            <div style={styles.headerBadge}>
+              <BookOpen size={18} />
+              <span>Mock Test</span>
             </div>
-            <h1 style={styles.heroTitle}>📝 Mock Tests</h1>
-            <p style={styles.heroSubtitle}>
-              Test your knowledge with our comprehensive mock exams and track your progress
+            <h1 style={styles.headerTitle}>Static Notation Mock Test</h1>
+            <p style={styles.headerSubtitle}>
+              Test your knowledge and track your progress
             </p>
           </div>
         </div>
@@ -168,52 +169,30 @@ function StudentMockTests() {
                   animationDelay: `${index * 0.1}s`,
                 }}
               >
-                {/* Card Header */}
-                <div style={styles.cardHeader}>
-                  <div style={styles.testIcon}>📋</div>
-                  <div style={styles.difficultyBadge}>
-                    <span style={{ 
-                      ...styles.difficultyDot, 
-                      background: getDifficultyColor(test.questions?.length || 0) 
-                    }} />
-                    <span style={styles.difficultyText}>
-                      {getDifficultyText(test.questions?.length || 0)}
-                    </span>
-                  </div>
+                {/* Question Counter */}
+                <div style={styles.questionCounter}>
+                  <span>Question 1 of {test.questions?.length || 0}</span>
                 </div>
 
-                {/* Test Title */}
-                <h3 style={styles.testTitle}>{test.title}</h3>
-                <p style={styles.testDescription}>
-                  {test.description || "Test your knowledge with this comprehensive assessment covering key concepts and practical scenarios."}
-                </p>
-
-                {/* Test Meta Info */}
-                <div style={styles.testMeta}>
-                  <div style={styles.metaItem}>
-                    <HelpCircle size={14} />
-                    <span>{test.questions?.length || 0} Questions</span>
-                  </div>
-                  <div style={styles.metaItem}>
-                    <Clock size={14} />
-                    <span>{Math.ceil((test.questions?.length || 0) * 1.5)} min</span>
-                  </div>
-                  <div style={styles.metaItem}>
-                    <Calendar size={14} />
-                    <span>{formatDate(test.createdAt)}</span>
+                {/* Question Preview */}
+                <div style={styles.questionPreview}>
+                  <h3 style={styles.questionTitle}>Question 1</h3>
+                  <p style={styles.questionText}>
+                    {test.questions?.[0]?.question || "What is the time complexity of Binary Search?"}
+                  </p>
+                  
+                  {/* Options Preview */}
+                  <div style={styles.optionsPreview}>
+                    {test.questions?.[0]?.options?.map((option, idx) => (
+                      <div key={idx} style={styles.optionItem}>
+                        <span style={styles.optionLetter}>
+                          {String.fromCharCode(65 + idx)}.
+                        </span>
+                        <span style={styles.optionText}>{option || `Option ${idx + 1}`}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-
-                {/* Score Indicator (if completed) */}
-                {test.completed && test.score && (
-                  <div style={styles.scoreSection}>
-                    <div style={styles.scoreLabel}>Your Score</div>
-                    <div style={styles.scoreValue}>{test.score}%</div>
-                    <div style={styles.scoreBar}>
-                      <div style={{ ...styles.scoreFill, width: `${test.score}%` }} />
-                    </div>
-                  </div>
-                )}
 
                 {/* Action Button */}
                 <button
@@ -289,18 +268,18 @@ const styles = {
     fontSize: "14px",
   },
 
-  heroSection: {
+  headerSection: {
     background: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
-    padding: "60px 40px",
+    padding: "50px 40px",
     marginBottom: "30px",
   },
 
-  heroContent: {
+  headerContent: {
     maxWidth: "1200px",
     margin: "0 auto",
   },
 
-  heroBadge: {
+  headerBadge: {
     display: "inline-flex",
     alignItems: "center",
     gap: "8px",
@@ -312,14 +291,14 @@ const styles = {
     marginBottom: "16px",
   },
 
-  heroTitle: {
-    fontSize: "42px",
+  headerTitle: {
+    fontSize: "36px",
     fontWeight: "800",
     color: "white",
     marginBottom: "12px",
   },
 
-  heroSubtitle: {
+  headerSubtitle: {
     fontSize: "16px",
     color: "#94a3b8",
     maxWidth: "600px",
@@ -390,7 +369,7 @@ const styles = {
 
   testsGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))",
     gap: "24px",
     maxWidth: "1200px",
     margin: "0 auto",
@@ -408,99 +387,61 @@ const styles = {
     transform: "translateY(20px)",
   },
 
-  cardHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "16px",
-  },
-
-  testIcon: {
-    fontSize: "32px",
-  },
-
-  difficultyBadge: {
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
+  questionCounter: {
+    padding: "8px 16px",
     background: "#f1f5f9",
-    padding: "4px 10px",
-    borderRadius: "20px",
-  },
-
-  difficultyDot: {
-    width: "8px",
-    height: "8px",
-    borderRadius: "50%",
-  },
-
-  difficultyText: {
-    fontSize: "12px",
-    fontWeight: "500",
-    color: "#475569",
-  },
-
-  testTitle: {
-    fontSize: "20px",
-    fontWeight: "700",
-    color: "#1e293b",
-    marginBottom: "8px",
-  },
-
-  testDescription: {
-    fontSize: "14px",
-    color: "#64748b",
-    lineHeight: "1.5",
-    marginBottom: "16px",
-  },
-
-  testMeta: {
-    display: "flex",
-    gap: "16px",
-    marginBottom: "16px",
-    flexWrap: "wrap",
-  },
-
-  metaItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
+    borderRadius: "8px",
     fontSize: "13px",
     color: "#64748b",
+    marginBottom: "20px",
+    display: "inline-block",
   },
 
-  scoreSection: {
+  questionPreview: {
+    marginBottom: "20px",
+  },
+
+  questionTitle: {
+    fontSize: "18px",
+    fontWeight: "700",
+    color: "#1e293b",
+    marginBottom: "12px",
+  },
+
+  questionText: {
+    fontSize: "15px",
+    color: "#334155",
     marginBottom: "16px",
+    lineHeight: "1.6",
+  },
+
+  optionsPreview: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
     padding: "12px",
     background: "#f8fafc",
     borderRadius: "12px",
   },
 
-  scoreLabel: {
-    fontSize: "12px",
+  optionItem: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    padding: "6px 10px",
+    borderRadius: "6px",
+    fontSize: "14px",
+    color: "#475569",
+  },
+
+  optionLetter: {
+    fontWeight: "600",
     color: "#64748b",
-    marginBottom: "4px",
+    minWidth: "24px",
   },
 
-  scoreValue: {
-    fontSize: "18px",
-    fontWeight: "700",
-    color: "#10b981",
-    marginBottom: "8px",
-  },
-
-  scoreBar: {
-    height: "6px",
-    background: "#e2e8f0",
-    borderRadius: "10px",
-    overflow: "hidden",
-  },
-
-  scoreFill: {
-    height: "100%",
-    background: "linear-gradient(90deg, #10b981, #059669)",
-    borderRadius: "10px",
-    transition: "width 0.5s ease",
+  optionText: {
+    color: "#475569",
   },
 
   startBtn: {

@@ -278,12 +278,6 @@ function Students() {
                       }} />
                     </div>
                   </div>
-
-                  {/* Action Button */}
-                  <button style={styles.viewBtn}>
-                    View Details
-                    <ChevronRight size={14} />
-                  </button>
                 </div>
               ))}
             </div>
@@ -633,23 +627,6 @@ const styles = {
     height: "100%",
     background: "linear-gradient(90deg, #10b981, #059669)",
     borderRadius: "10px",
-  },
-
-  viewBtn: {
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "8px",
-    background: "#f1f5f9",
-    border: "1px solid #e2e8f0",
-    padding: "10px",
-    borderRadius: "10px",
-    fontSize: "13px",
-    fontWeight: "500",
-    cursor: "pointer",
-    transition: "all 0.3s ease",
-    color: "#475569",
   },
 
   emptyState: {

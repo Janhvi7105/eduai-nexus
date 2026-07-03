@@ -297,49 +297,61 @@ Payment	Razorpay
 Cloud Storage	Cloudinary
 Email	Brevo
 AI	Google Gemini
-📸 Application Preview
+## 📸 Application Preview
 
 Below are screenshots showcasing the major features of the application.
 
-🏠 Home
+### 🏠 Home
 
-Home
+![Home](./screenshots/home.png)
 
-👨‍🎓 Student Dashboard
+---
 
-Student Dashboard
+### 🔐 Login
 
-👩‍🏫 Instructor Dashboard
+![Login](./screenshots/login.png)
 
-Instructor Dashboard
+---
 
-👨‍💼 Admin Dashboard
+### 👨‍🎓 Student Dashboard
 
-Admin Dashboard
+![Student Dashboard](./screenshots/student-dashboard.png)
 
-📚 Course Learning
+---
 
-Course Player
+### 👩‍🏫 Instructor Dashboard
 
-📝 Mock Tests
+![Instructor Dashboard](./screenshots/teacher-dashboard.png)
 
-Mock Tests
+---
 
-📄 Certificate
+### 👨‍💼 Admin Dashboard
 
-Certificate
+![Admin Dashboard](./screenshots/admin-dashboard.png)
 
-🤖 AI Study Assistant
+---
 
-AI Chatbot
+### 📚 Course Learning
 
-📚 Notes Management
+![Course Player](./screenshots/course-player.png)
 
-Notes
+---
 
-💳 Course Enrollment
+### 🤖 AI Study Assistant
 
-Payment
+![AI Chatbot](./screenshots/ai-chatbot.png)
+
+---
+
+### 🏆 Certificate
+
+![Certificate](./screenshots/certificate.png)
+
+---
+
+### 💳 Course Enrollment
+
+![Payment](./screenshots/payment.png)
 
 📖 How to Use
 Register or Login.
